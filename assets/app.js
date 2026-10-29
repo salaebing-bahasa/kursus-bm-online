@@ -1,18 +1,27 @@
 (function () {
   "use strict";
 
-  // 1. Kad kontrastif di laman utama
-  var btn = document.getElementById("c-next");
-  if (btn) {
-    var pairs = [["makae", "makan"], ["ikae", "ikan"], ["ayae", "ayam"], ["panah", "panas"], ["abae", "abang"],
-      ["tigo", "tiga"], ["muroh", "murah"], ["mahae", "mahal"], ["hijo", "hijau"], ["kunie", "kuning"],
-      ["beloq", "belok"], ["sakiq", "sakit"], ["batoq", "batuk"], ["nasik", "nasi"], ["ambo", "saya"], ["kijo", "kerja"]];
-    var i = 0, pair = document.querySelector(".pair");
-    btn.addEventListener("click", function () {
-      i = (i + 1) % pairs.length;
-      ["c-dia", "c-dia2"].forEach(function (id) { document.getElementById(id).textContent = pairs[i][0]; });
-      ["c-std", "c-std2"].forEach(function (id) { document.getElementById(id).textContent = pairs[i][1]; });
-      pair.classList.remove("swap"); void pair.offsetWidth; pair.classList.add("swap");
+  // 1. Kad "Kata hari ini" di laman utama
+  var wbtn = document.getElementById("w-next");
+  if (wbtn && window.VOCAB && window.VOCAB.length) {
+    var V = window.VOCAB, card = document.querySelector(".pair"), last = 0;
+    function show(i) {
+      var v = V[i];
+      document.getElementById("w-ms").textContent = v[0];
+      document.getElementById("w-th").textContent = v[1];
+      document.getElementById("w-ex").textContent = v[2];
+      var link = document.getElementById("w-link");
+      link.href = "pertemuan/" + String(v[3]).padStart(2, "0") + ".html";
+      link.textContent = "Dari Pertemuan " + v[3];
+      card.classList.remove("swap"); void card.offsetWidth; card.classList.add("swap");
+      last = i;
+    }
+    // kata berbeza setiap hari, sama untuk semua pelajar pada hari yang sama
+    var day = Math.floor((Date.now() + 7 * 3600e3) / 864e5);
+    show(day % V.length);
+    wbtn.addEventListener("click", function () {
+      var i; do { i = Math.floor(Math.random() * V.length); } while (V.length > 1 && i === last);
+      show(i);
     });
   }
 
@@ -92,19 +101,4 @@
     document.querySelectorAll(".block").forEach(function (s) { io.observe(s); });
   }
 
-  // 5. Carian halaman kontrastif
-  var cs = document.getElementById("csearch");
-  if (cs) {
-    cs.addEventListener("input", function () {
-      var q = cs.value.trim().toLowerCase();
-      document.querySelectorAll(".cgroup").forEach(function (g) {
-        var any = false;
-        g.querySelectorAll("li").forEach(function (li) {
-          var hit = !q || li.textContent.toLowerCase().indexOf(q) > -1;
-          li.hidden = !hit; any = any || hit;
-        });
-        g.hidden = !any;
-      });
-    });
-  }
 })();
