@@ -2,7 +2,7 @@
 """Bina laman web Kursus BM Online daripada fail _src/units/*.md.
 
 Cara guna:  python3 _src/build.py
-Output ditulis ke folder akar repositori (index.html, pertemuan/*.html, kontrastif.html).
+Output ditulis ke folder akar repositori (index.html, pertemuan/*.html).
 """
 import html, json, re
 from pathlib import Path
@@ -22,7 +22,7 @@ PHASES = [
 # (tarikh ISO, tarikh paparan, pengajar, fokus kemahiran & tatabahasa, aktiviti & penilaian)
 SCHEDULE = {
     1: ("2026-11-01", "1 November 2026", "Prof. Madya Dr. Numan", "Sejarah dan perkembangan Bahasa Melayu di Nusantara", "Garis masa sejarah Bahasa Melayu"),
-    2: ("2026-11-08", "8 November 2026", "Assist. Prof. Nawawi", "Mendengar: Vokal (a, e, i, o, u)", "Perbandingan bunyi 'makae' dan 'makan'"),
+    2: ("2026-11-08", "8 November 2026", "Assist. Prof. Nawawi", "Mendengar: Vokal (a, e, i, o, u)", "Latihan mendengar dan menyebut bunyi vokal"),
     3: ("2026-11-15", "15 November 2026", "Assist. Prof. Huda", "Bertutur: Kata Ganti Nama Diri (Saya, Awak, Anda)", "Lakonan simulasi perkenalan diri secara formal"),
     4: ("2026-11-22", "22 November 2026", "Dr. Abdonlah", "Membaca: Kata Nama Am & Kata Nama Khas", "Membina carta organisasi keluarga sendiri"),
     5: ("2026-11-29", "29 November 2026", "Dr. Samsina", "Mendengar: Kata Bilangan & Penjodoh Bilangan", "Kuiz spontan harga barang di pasar"),
@@ -142,24 +142,26 @@ def quiz_html(qs, uid):
     return "\n".join(out)
 
 
-def contrast_pairs(md_text):
-    """Ambil pasangan dialek → standard daripada jadual 'Fokus Sebutan'."""
-    pairs = []
-    for m in re.finditer(r"### Fokus Sebutan[^\n]*\n\n((?:\|.*\n?)+)", md_text):
-        rows = table_rows(m.group(1).strip().splitlines())
-        head = [h.lower() for h in rows[0]]
-        di = next(k for k, h in enumerate(head) if "dialek" in h)
-        si = next(k for k, h in enumerate(head) if "standard" in h or "bms" in h)
-        for r in rows[1:]:
-            clean = lambda s: re.sub(r"\*\*|\(elak\)", "", s).strip()
-            pairs.append((clean(r[di]), clean(r[si])))
-    return pairs
+def vocab_rows(units):
+    """Kumpul baris kosa kata (Bahasa Melayu | Bahasa Thai | Contoh Ayat) untuk kad 'Kata hari ini'."""
+    out = []
+    for n, (meta, sections, _) in units.items():
+        for title, content in sections:
+            if title != "Kosa Kata":
+                continue
+            for m in re.finditer(r"((?:^\|.*\n?)+)", content, flags=re.M):
+                rows = table_rows(m.group(1).strip().splitlines())
+                if len(rows) < 2 or rows[0][:3] != ["Bahasa Melayu", "Bahasa Thai", "Contoh Ayat"]:
+                    continue
+                for r in rows[1:]:
+                    if len(r) >= 3 and r[0] and r[2]:
+                        out.append([r[0], r[1], r[2], n])
+    return out
 
 
 def page(title, body, depth=0, desc="", active=""):
     p = "../" * depth
-    nav = [("index.html#jadual", "Jadual", "jadual"), ("kontrastif.html", "Dialek → Standard", "kontrastif"),
-           ("index.html#penilaian", "Penilaian", "penilaian")]
+    nav = [("index.html#jadual", "Jadual", "jadual"), ("index.html#penilaian", "Penilaian", "penilaian")]
     links = "".join(f'<a href="{p}{h}"{" aria-current=\"page\"" if a == active else ""}>{t}</a>' for h, t, a in nav)
     return f"""<!doctype html>
 <html lang="ms">
@@ -261,18 +263,20 @@ def build_index(units):
     <span class="s-teacher">{esc(teacher)}</span>
   </a></li>""")
         rows.append(f'<section class="phase"><h3><span>Pertemuan {a}–{b}</span>{esc(name)}</h3><ol class="sessions">{"".join(items)}</ol></section>')
+    vocab = vocab_rows(units)
     sched_json = json.dumps({n: [SCHEDULE[n][0], units[n][0]["title"], SCHEDULE[n][1], SCHEDULE[n][2]] for n in SCHEDULE})
     body = f"""
 <section class="hero">
   <div class="hero-text">
-    <h1>Dari dialek ke bahasa standard, satu Ahad demi satu Ahad.</h1>
-    <p class="lede">Kursus dalam talian 20 pertemuan untuk penutur Melayu Selatan Thai. Kita mulakan dengan apa yang sudah anda tahu — dialek ibunda — dan belajar memakai Bahasa Melayu Standard sebagai "pakaian rasmi" mengikut tempat.</p>
+    <h1>Bahasa Melayu Standard, satu Ahad demi satu Ahad.</h1>
+    <p class="lede">Kursus dalam talian 20 pertemuan untuk peserta di Selatan Thai. Setiap pertemuan membawa satu tema kehidupan seharian, lengkap dengan kosa kata Melayu–Thai, dialog, tatabahasa dan kuiz kendiri.</p>
     <div class="actions"><a class="btn" href="#jadual">Lihat jadual kelas</a><a class="btn-ghost" href="pertemuan/01.html">Mula dari Pertemuan 1</a></div>
   </div>
-  <figure class="contrast" aria-live="polite">
-    <div class="pair"><span class="dia" id="c-dia">makae</span><span class="arrow" aria-hidden="true"></span><span class="std" id="c-std">makan</span></div>
-    <figcaption>Dalam dialek kita sebut <b id="c-dia2">makae</b>. Dalam bahasa standard kita sebut <b id="c-std2">makan</b>.</figcaption>
-    <button type="button" class="btn-ghost" id="c-next">Contoh lain</button>
+  <figure class="contrast word" aria-live="polite">
+    <p class="word-label">Kata hari ini</p>
+    <div class="pair"><span class="std" id="w-ms">{esc(vocab[0][0])}</span><span class="th" id="w-th" lang="th">{esc(vocab[0][1])}</span></div>
+    <figcaption id="w-ex">{esc(vocab[0][2])}</figcaption>
+    <div class="word-foot"><button type="button" class="btn-ghost" id="w-next">Kata lain</button><a id="w-link" href="pertemuan/{vocab[0][3]:02d}.html">Dari Pertemuan {vocab[0][3]}</a></div>
   </figure>
 </section>
 
@@ -299,7 +303,7 @@ def build_index(units):
 <section class="unique">
   <h2>Keunikan modul</h2>
   <div class="two">
-    <div><h3>Pendekatan kontrastif</h3><p>Guru sentiasa membandingkan: "Dalam dialek kita sebut begini, dalam bahasa standard sebut begini." Semua pasangan bunyi yang dipelajari dikumpulkan di halaman <a href="kontrastif.html">Dialek → Standard</a>.</p></div>
+    <div><h3>Dwibahasa Melayu–Thai</h3><p>Setiap kosa kata, frasa dan contoh ayat disertakan terjemahan bahasa Thai, supaya peserta faham makna dengan cepat dan boleh mengulang kaji sendiri di rumah.</p></div>
     <div><h3>Fokus dalam talian</h3><p>Alat digital yang interaktif — Kahoot, Quizizz, Wordwall, Breakout Rooms — supaya peserta di Selatan Thai seronok belajar dan tidak terbeban.</p></div>
   </div>
 </section>
@@ -324,36 +328,13 @@ def build_index(units):
     </div>
   </div>
 </section>
-<script>window.SCHEDULE = {sched_json};</script>
+<script>window.SCHEDULE = {sched_json}; window.VOCAB = {json.dumps(vocab, ensure_ascii=False)};</script>
 """
     (ROOT / "index.html").write_text(page("Kursus Bahasa Melayu Online — Tahap Permulaan", body, 0,
         "Kursus Bahasa Melayu secara dalam talian (tahap permulaan) untuk penutur Melayu Selatan Thai."), encoding="utf-8")
 
 
-def build_contrast(units):
-    groups, allpairs = [], []
-    for n, (meta, _, raw) in units.items():
-        pairs = contrast_pairs(raw)
-        if not pairs:
-            continue
-        allpairs += pairs
-        lis = "".join(f'<li><span class="dia">{esc(d)}</span><span class="arrow" aria-hidden="true"></span><span class="std">{esc(s)}</span></li>' for d, s in pairs)
-        groups.append(f'<section class="cgroup"><h2><a href="pertemuan/{n:02d}.html">Pertemuan {n}: {esc(meta["title"])}</a></h2><ul class="clist">{lis}</ul></section>')
-    body = f"""
-<section class="page-head">
-  <h1>Dialek → Standard</h1>
-  <p class="lede">Semua pasangan sebutan yang dibandingkan dalam kursus ini — {len(allpairs)} pasangan daripada {len(groups)} pertemuan. Kiri: sebutan dialek Patani. Kanan: Bahasa Melayu Standard.</p>
-  <label class="search"><span>Cari perkataan</span><input type="search" id="csearch" placeholder="contoh: makan, abang, mahal"></label>
-</section>
-<div class="cgroups">{''.join(groups)}</div>
-"""
-    (ROOT / "kontrastif.html").write_text(page("Dialek → Standard — Kursus BM Online", body, 0,
-        "Senarai pasangan sebutan dialek Patani dan Bahasa Melayu Standard.", "kontrastif"), encoding="utf-8")
-    (ROOT / "assets" / "pairs.json").write_text(json.dumps(allpairs, ensure_ascii=False), encoding="utf-8")
-
-
 if __name__ == "__main__":
     u = build_units()
     build_index(u)
-    build_contrast(u)
     print("Siap:", len(u), "pertemuan")
