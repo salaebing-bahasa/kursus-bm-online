@@ -19,6 +19,7 @@ Jadual (tarikh, pengajar, fokus) ada dalam `SCHEDULE` di `_src/build.py`.
 - `sitemap.xml` dan `robots.txt` dibina semula setiap kali `python3 _src/build.py` dijalankan.
 
 ## Nota PDF setiap pertemuan
+- Dua butang di setiap pertemuan: **Ringkasan pelajaran (PDF)** (`pdf/pertemuan-NN.pdf`, sama dengan laman web) dan **Nota kuliah penuh (PDF)** (`pdf/nota-kuliah-NN.pdf`, daripada fail Word Nota Kuliah yang dikemas kini). Butang kedua hanya muncul jika fail itu wujud (Pertemuan 20 tiada nota kuliah).
 - Butang "Muat turun PDF" di setiap pertemuan memuat turun `pdf/pertemuan-NN.pdf`.
 - PDF dijana daripada halaman laman web, jadi isinya sentiasa sama dengan laman web.
 - Selepas mengubah `_src/units/*.md`, bina semula HTML **dan** PDF:
