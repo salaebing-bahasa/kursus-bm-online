@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://salaebing-bahasa.github.io/kursus-bm-online/sitemap.xml
