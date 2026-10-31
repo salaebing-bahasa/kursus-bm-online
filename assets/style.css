@@ -321,8 +321,26 @@ td:first-child { font-weight: 600; }
   .sheet { margin: 1rem auto 1.8rem; }
   .pager a { max-width: none; }
 }
+.btn svg { margin-right: .45rem; flex: none; }
+.btn .bi .tr { opacity: .9; }
+
+/* Cetak / PDF: hanya isi pelajaran, tanpa navigasi dan butang */
 @media print {
-  body { background: #fff; }
-  .site-head, .site-foot, .pager, .sec-nav, .actions, .quiz-reset { display: none; }
-  .sheet { box-shadow: none; margin: 0; max-width: none; }
+  @page { size: A4; }
+  html, body { background: #fff !important; }
+  body { font-size: 11.5pt; }
+  .site-head, .site-foot, .pager, .sec-nav, .crumbs, .actions, .quiz-reset, .score, .fb, .skip, .swipe-hint { display: none !important; }
+  main { padding: 0; max-width: none; }
+  .sheet { box-shadow: none; margin: 0; max-width: none; padding: 0; background: #fff; border-radius: 0; }
+  .running, .folio { display: none; }
+  .opener { padding-top: 0; }
+  .unit-meta { break-inside: avoid; }
+  h2, h3, h4, .block > h2 { break-after: avoid; page-break-after: avoid; }
+  tr, .turn, .q, blockquote, .bars li { break-inside: avoid; page-break-inside: avoid; }
+  .table-wrap { overflow: visible; border-color: #ccc; }
+  .table-wrap.cards { overflow: visible; }
+  .q { padding: .6rem .8rem .4rem; }
+  .opt { min-height: 0; padding: .3rem .6rem; }
+  .block { padding-bottom: .8rem; }
+  a { color: inherit; text-decoration: none; }
 }
