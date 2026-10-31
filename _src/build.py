@@ -263,11 +263,10 @@ def build_units():
                   else '<a class="prev" href="../index.html#kandungan"><small>← Kandungan</small>Kandungan</a>')
         next_l = (f'<a class="next" href="{n+1:02d}.html" rel="next"><small>Pertemuan {n+1} →</small>{esc(units[n+1][0]["title"])}</a>' if n < 20
                   else '<a class="next" href="../index.html#penilaian"><small>Akhir buku →</small>Penilaian</a>')
-        dl = ""
-        if meta.get("docx"):
-            dl += f'<a class="btn" href="https://drive.google.com/file/d/{meta["docx"]}/view" target="_blank" rel="noopener">Nota kuliah penuh (Word)<span class="sr-only"> (dibuka dalam tab baharu)</span></a>'
-        if meta.get("pdf"):
-            dl += f'<a class="btn-ghost" href="https://drive.google.com/file/d/{meta["pdf"]}/view" target="_blank" rel="noopener">Versi PDF<span class="sr-only"> (dibuka dalam tab baharu)</span></a>'
+        # Nota pertemuan dalam PDF (dijana daripada halaman ini oleh _src/pdf.py, jadi isinya sama dengan laman web)
+        dl = (f'<a class="btn" href="../pdf/pertemuan-{n:02d}.pdf" download="Kursus-BM-Online-Pertemuan-{n:02d}.pdf">'
+              f'<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>'
+              f'<span class="bi"><span>Muat turun PDF</span><span class="tr" lang="th">ดาวน์โหลด PDF</span></span></a>')
         prep = meta.get("penyediaan", "—")
         prep_html = f'<div><dt>Penyediaan bahan <span lang="th">· ผู้เตรียมเอกสาร</span></dt><dd>{esc(prep)}</dd></div>' if prep not in ("", "—") else ""
         note17 = '<p class="flag">Tarikh dalam reka bentuk kursus sama dengan Pertemuan 16 — sila semak dengan penyelaras.</p>' if n == 17 else ""
