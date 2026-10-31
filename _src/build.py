@@ -7,13 +7,15 @@ Output ditulis ke folder akar repositori (index.html, pertemuan/*.html).
 import html, json, re
 from pathlib import Path
 import markdown
+import lxml.html
+from jawi import jawi, MISSES
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "_src" / "units"
 GOATCOUNTER = "kursus-bm-online"  # kod laman GoatCounter
 SITE = "https://salaebing-bahasa.github.io/kursus-bm-online/"
 SITEMAP = []
-FONTS = "https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@500;600;700&family=Sarabun:ital,wght@0,400;0,600;1,400&display=swap"
+FONTS = "https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@500;600;700&family=Noto+Naskh+Arabic:wght@400;600&family=Sarabun:ital,wght@0,400;0,600;1,400&display=swap"
 
 PHASES = [
     (1, 5, "Aktiviti Harian & Perhubungan (I)"),
@@ -137,6 +139,86 @@ def label_tables(h):
     return re.sub(r"<table>.*?</table>", one, h, flags=re.S)
 
 
+# ---------------------------------------------------------------- tulisan Jawi
+# Setiap baris/sel berbahasa Melayu diberi baris Jawi di bawahnya (<span class="jw">).
+# Ejaan: _src/jawi.tsv (guru boleh membetulkan ejaan dalam fail itu).
+TH_CHARS = re.compile("[\u0E00-\u0E7F]")
+AR_CHARS = re.compile("[\u0600-\u06FF]")
+JW_TAGS = {"td", "li", "p", "legend", "button", "h3", "h4", "blockquote"}
+JW_BLOCKS = {"p", "ul", "ol", "li", "table", "div", "fieldset", "blockquote", "h3", "h4"}
+# lajur yang berisi huruf/bunyi, IPA atau perkataan Inggeris — tidak dieja dalam Jawi
+JW_SKIP_COLS = {"Vokal", "Konsonan", "Diftong", "IPA", "Bahasa Inggeris", "Angka", "Markah (1–10)", "✓"}
+
+
+def jw_span(text, tag="span"):
+    j = jawi(text)
+    if not AR_CHARS.search(j):
+        return ""
+    return f'<{tag} class="jw" lang="ms-Arab" dir="rtl">{esc(j)}</{tag}>'
+
+
+def jw_text(el):
+    """Teks Rumi elemen (tanpa nombor soalan dan tanpa baris Jawi yang sudah ada)."""
+    parts = []
+    def walk(e):
+        cls = e.get("class") or ""
+        if "qn" in cls.split() or "jw" in cls.split():
+            if e.tail: parts.append(e.tail)
+            return
+        if e.text: parts.append(e.text)
+        for c in e: walk(c)
+        if e.tail and e is not el: parts.append(e.tail)
+    walk(el)
+    return re.sub(r"\s+", " ", "".join(parts)).strip()
+
+
+def add_jawi(fragment):
+    """Tambah baris Jawi pada setiap elemen teks Melayu dalam serpihan HTML."""
+    root = lxml.html.fragment_fromstring(fragment, create_parent="div")
+    for el in list(root.iter()):
+        if not isinstance(el.tag, str) or el.tag not in JW_TAGS:
+            continue
+        if any(isinstance(c.tag, str) and c.tag in JW_BLOCKS for c in el.iterdescendants()):
+            continue                                     # proses elemen paling dalam sahaja
+        if el.tag == "td" and el.get("data-label", "") in JW_SKIP_COLS:
+            continue
+        cls = (el.get("class") or "").split()
+        if el.tag == "p" and ("fb" in cls or "flag" in cls):
+            continue
+        text = jw_text(el)
+        if not text or TH_CHARS.search(text) or not re.search("[A-Za-z]{2}", text):
+            continue
+        if re.fullmatch(r"[A-Za-z]{1,2}", text):          # satu huruf / bunyi sahaja
+            continue
+        span = jw_span(text)
+        if not span:
+            continue
+        if el.tag == "button":                            # pilihan kuiz: teks Rumi dalam .rm (dibaca oleh app.js)
+            rm = lxml.html.fragment_fromstring(f'<span class="rm">{esc(el.text or "")}</span>')
+            el.text = None; el.insert(0, rm)
+        node = lxml.html.fragment_fromstring(span)
+        if el.tag == "legend":                            # soalan kuiz: baris Jawi di bawah legend, dalam kotak soalan
+            node.tail = el.tail; el.tail = None
+            el.addnext(node)
+        else:
+            el.append(node)
+    out = (root.text or "") + "".join(lxml.html.tostring(c, encoding="unicode") for c in root)
+    return out
+
+
+# Butang tunjuk/sembunyi baris Jawi (pilihan disimpan dalam pelayar)
+JW_BTN = ('<button type="button" class="btn-ghost jw-toggle" aria-pressed="true">'
+          '<span class="jw-mark" aria-hidden="true">ج</span>'
+          '<span class="bi"><span>Tulisan Jawi</span><span class="tr" lang="th">แสดงอักษรยาวี</span></span></button>')
+
+
+def jw_report():
+    """Cetak kata yang dieja secara automatik (belum ada dalam _src/jawi.tsv)."""
+    if MISSES:
+        print(f"Jawi: {len(MISSES)} kata dieja secara automatik (sila semak & tambah ke _src/jawi.tsv):")
+        print("  " + ", ".join(f"{k}={v}" for k, v in sorted(MISSES.items())))
+
+
 def parse_quiz(md_text):
     qs, cur = [], None
     for ln in md_text.splitlines():
@@ -223,6 +305,7 @@ def page(title, body, depth=0, desc="", active="", path=""):
 <noscript><link rel="stylesheet" href="{FONTS}"></noscript>
 <link rel="stylesheet" href="{p}assets/style.css">
 <link rel="icon" href="{p}assets/favicon.svg" type="image/svg+xml">
+<script>try{{if(localStorage.getItem("jawi")==="0")document.documentElement.classList.add("no-jw")}}catch(e){{}}</script>
 </head>
 <body>
 <a class="skip" href="#isi">Langkau ke kandungan</a>
@@ -258,7 +341,8 @@ def build_units():
             sid = SECTION_IDS.get(title, re.sub(r"\W+", "-", title.lower()))
             toc.append(f'<li><a href="#{sid}">{esc(title)}<span lang="th">{SECTION_TH.get(sid, "")}</span></a></li>')
             inner = quiz_html(parse_quiz(content), n) if sid == "kuiz" else render_content(content)
-            parts.append(f'<section class="block" id="{sid}"><h2>{esc(title)}<small lang="th">{SECTION_TH.get(sid, "")}</small></h2>{inner}</section>')
+            inner = add_jawi(inner)
+            parts.append(f'<section class="block" id="{sid}"><h2>{esc(title)}{jw_span(title)}<small lang="th">{SECTION_TH.get(sid, "")}</small></h2>{inner}</section>')
         prev_l = (f'<a class="prev" href="{n-1:02d}.html" rel="prev"><small>← Pertemuan {n-1}</small>{esc(units[n-1][0]["title"])}</a>' if n > 1
                   else '<a class="prev" href="../index.html#kandungan"><small>← Kandungan</small>Kandungan</a>')
         next_l = (f'<a class="next" href="{n+1:02d}.html" rel="next"><small>Pertemuan {n+1} →</small>{esc(units[n+1][0]["title"])}</a>' if n < 20
@@ -278,16 +362,16 @@ def build_units():
   <nav class="crumbs" aria-label="Laluan"><a href="../index.html#kandungan">Kandungan</a><span class="cr-ph" aria-hidden="true">›</span><span class="cr-ph">{esc(phase)}</span><span aria-hidden="true">›</span><span aria-current="page">Pertemuan {n}</span></nav>
   <header class="opener">
     <p class="op-k">Pertemuan {n} · <time datetime="{iso}">{date}</time></p>
-    <h1>{esc(meta['title'])}</h1>
+    <h1>{esc(meta['title'])}{jw_span(meta['title'])}</h1>
     <p class="th-title" lang="th">{esc(meta.get('th',''))}</p>
     {note17}
     <dl class="unit-meta">
       <div><dt>Pengajar <span lang="th">· ผู้สอน</span></dt><dd>{esc(teacher)}</dd></div>
-      <div><dt>Fokus kemahiran <span lang="th">· ทักษะที่เน้น</span></dt><dd>{esc(focus)}</dd></div>
-      <div><dt>Aktiviti & penilaian <span lang="th">· กิจกรรมและการประเมิน</span></dt><dd>{esc(activity)}</dd></div>
+      <div><dt>Fokus kemahiran <span lang="th">· ทักษะที่เน้น</span></dt><dd>{esc(focus)}{jw_span(focus)}</dd></div>
+      <div><dt>Aktiviti & penilaian <span lang="th">· กิจกรรมและการประเมิน</span></dt><dd>{esc(activity)}{jw_span(activity)}</dd></div>
       {prep_html}
     </dl>
-    <div class="actions">{dl}</div>
+    <div class="actions">{dl}{JW_BTN}</div>
   </header>
   <nav class="sec-nav" aria-label="Bahagian pelajaran"><ol>{''.join(toc)}</ol></nav>
   {''.join(parts)}
@@ -424,3 +508,4 @@ if __name__ == "__main__":
         + "".join(f"  <url><loc>{u_}</loc></url>\n" for u_ in sorted(SITEMAP)) + "</urlset>\n", encoding="utf-8")
     (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE}sitemap.xml\n", encoding="utf-8")
     print("Siap:", len(u), "pertemuan")
+    jw_report()
