@@ -41,7 +41,7 @@ SCHEDULE = {
     15: ("2027-02-07", "7 Februari 2027", "Ustaz Nurdin", "Menulis: Imbuhan Awalan (meN-, ber-)", "Menulis kad ucapan digital untuk kawan"),
     16: ("2027-02-14", "14 Februari 2027", "Asst. Prof. Muhammad Salaebing", "Membaca: Kata Pinjaman & Istilah ICT", "Mencari maklumat di laman berita Melayu"),
     17: ("2027-02-14", "14 Februari 2027", "Asst. Prof. Samiyah Baleh", "Bertutur: Ayat Penyata & Ayat Seruan", "Pembentangan \"Cita-cita Saya\""),
-    18: ("2027-02-21", "21 Februari 2027", "Asst. Prof. Hasbullah", "Mendengar: Kata Tanya (Bagaimana, Mengapa)", "Membina itinerari pelancongan ringkas"),
+    18: ("2027-02-21", "21 Februari 2027", "Asst. Prof. Hasbulloh Nadaraning", "Mendengar: Kata Tanya (Bagaimana, Mengapa)", "Membina itinerari pelancongan ringkas"),
     19: ("2027-02-28", "28 Februari 2027", "Asst. Prof. Dr. Pareeda Hayeeteh", "Menulis: Membina Perenggan Mudah", "Menulis ulasan pendek tentang filem Melayu"),
     20: ("2027-03-07", "7 Mac 2027", "Asst. Prof. Dr. Pareeda Hayeeteh, Puan Kartini Wado, Asst. Prof. Muhammad Salaebing & Dr. Uniansasmita Samoh", "Semua kemahiran: Pengukuhan tatabahasa", "Penilaian akhir: Pembentangan projek individu"),
 }
