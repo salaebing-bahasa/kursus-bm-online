@@ -263,14 +263,11 @@ def build_units():
                   else '<a class="prev" href="../index.html#kandungan"><small>← Kandungan</small>Kandungan</a>')
         next_l = (f'<a class="next" href="{n+1:02d}.html" rel="next"><small>Pertemuan {n+1} →</small>{esc(units[n+1][0]["title"])}</a>' if n < 20
                   else '<a class="next" href="../index.html#penilaian"><small>Akhir buku →</small>Penilaian</a>')
-        # Dua PDF: ringkasan pelajaran (dijana daripada halaman ini oleh _src/pdf.py) dan nota kuliah penuh (daripada fail Word)
+        # Ringkasan pelajaran dalam PDF (dijana daripada halaman ini oleh _src/pdf.py, jadi isinya sama dengan laman web)
         ICON = ('<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" '
                 'stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>')
         dl = (f'<a class="btn" href="../pdf/pertemuan-{n:02d}.pdf" download="Kursus-BM-Online-Pertemuan-{n:02d}-Ringkasan.pdf">{ICON}'
-              f'<span class="bi"><span>Ringkasan pelajaran (PDF)</span><span class="tr" lang="th">สรุปบทเรียน</span></span></a>')
-        if (ROOT / "pdf" / f"nota-kuliah-{n:02d}.pdf").exists():
-            dl += (f'<a class="btn-ghost" href="../pdf/nota-kuliah-{n:02d}.pdf" download="Kursus-BM-Online-Pertemuan-{n:02d}-Nota-Kuliah.pdf">{ICON}'
-                   f'<span class="bi"><span>Nota kuliah penuh (PDF)</span><span class="tr" lang="th">เอกสารประกอบการสอนฉบับเต็ม</span></span></a>')
+              f'<span class="bi"><span>Ringkasan pelajaran (PDF)</span><span class="tr" lang="th">ดาวน์โหลดสรุปบทเรียน</span></span></a>')
         prep = meta.get("penyediaan", "—")
         prep_html = f'<div><dt>Penyediaan bahan <span lang="th">· ผู้เตรียมเอกสาร</span></dt><dd>{esc(prep)}</dd></div>' if prep not in ("", "—") else ""
         note17 = '<p class="flag">Tarikh dalam reka bentuk kursus sama dengan Pertemuan 16 — sila semak dengan penyelaras.</p>' if n == 17 else ""
