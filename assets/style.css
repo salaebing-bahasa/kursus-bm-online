@@ -321,7 +321,8 @@ td:first-child { font-weight: 600; }
   .sheet { margin: 1rem auto 1.8rem; }
   .pager a { max-width: none; }
 }
-.btn svg { margin-right: .45rem; flex: none; }
+.btn svg, .btn-ghost svg { margin-right: .45rem; flex: none; }
+.btn-ghost .bi .tr { opacity: .9; }
 .btn .bi .tr { opacity: .9; }
 
 /* Cetak / PDF: hanya isi pelajaran, tanpa navigasi dan butang */
