@@ -28,7 +28,7 @@
   // 2. Kelas seterusnya (kelas bermula 2.00 petang, tamat 3.30 petang waktu Thailand)
   if (window.SCHEDULE) {
     var now = Date.now(), next = null;
-    document.querySelectorAll(".session").forEach(function (li) {
+    document.querySelectorAll(".session, .sched tr[data-date]").forEach(function (li) {
       var end = new Date(li.dataset.date + "T15:30:00+07:00").getTime();
       if (end < now) li.classList.add("is-past");
     });
@@ -43,6 +43,8 @@
         link.textContent = "Pertemuan " + next.n + ": " + next.s[1] + " — Ahad, " + next.s[2] + ", 2.00 petang bersama " + next.s[3];
         var li = document.querySelector('.session [href="' + link.getAttribute("href") + '"]');
         if (li) li.parentNode.classList.add("is-next");
+        var tr = document.querySelector('.sched tr[data-date="' + next.s[0] + '"]');
+        if (tr) tr.classList.add("is-next");
       } else {
         link.removeAttribute("href");
         link.textContent = "Kursus telah tamat. Terima kasih kerana belajar bersama kami!";
@@ -86,7 +88,7 @@
   });
 
   // 4. Penanda bahagian aktif dalam isi kandungan
-  var tocLinks = document.querySelectorAll(".toc a");
+  var tocLinks = document.querySelectorAll(".sec-nav a");
   if (tocLinks.length && "IntersectionObserver" in window) {
     var map = {};
     tocLinks.forEach(function (a) { map[a.getAttribute("href").slice(1)] = a; });

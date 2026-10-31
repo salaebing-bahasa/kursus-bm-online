@@ -159,10 +159,26 @@ def vocab_rows(units):
     return out
 
 
+def bi(ms, th):
+    return f'<span class="bi"><span>{ms}</span><span class="tr" lang="th">{th}</span></span>'
+
+
+def running(right):
+    return f'<p class="running" aria-hidden="true"><span>Kursus Bahasa Melayu Online</span><span>{right}</span></p>'
+
+
+ORN = '<p class="orn" aria-hidden="true"><span></span></p>'
+
+
+def folio(f):
+    return f'<p class="folio" aria-hidden="true"><span>{f}</span></p>'
+
+
 def page(title, body, depth=0, desc="", active=""):
     p = "../" * depth
-    nav = [("index.html#jadual", "Jadual", "jadual"), ("index.html#penilaian", "Penilaian", "penilaian")]
-    links = "".join(f'<a href="{p}{h}"{" aria-current=\"page\"" if a == active else ""}>{t}</a>' for h, t, a in nav)
+    nav = [("index.html#kandungan", "Kandungan", "สารบัญ", "kandungan"), ("index.html#jadual", "Jadual", "ตารางเรียน", "jadual"),
+           ("index.html#penilaian", "Penilaian", "การประเมิน", "penilaian")]
+    links = "".join(f'<a href="{p}{h}"{" aria-current=\"page\"" if a == active else ""}><span>{t}</span><small lang="th">{th}</small></a>' for h, t, th, a in nav)
     return f"""<!doctype html>
 <html lang="ms">
 <head>
@@ -179,7 +195,7 @@ def page(title, body, depth=0, desc="", active=""):
 <body>
 <a class="skip" href="#isi">Langkau ke kandungan</a>
 <header class="site-head">
-  <a class="brand" href="{p}index.html"><span class="mark" aria-hidden="true"></span><span>Kursus BM Online<small>Tahap Permulaan</small></span></a>
+  <a class="brand" href="{p}index.html"><span class="mark" aria-hidden="true"></span><span>Kursus BM Online<small>Tahap Permulaan · <span lang="th">ระดับเริ่มต้น</span></small></span></a>
   <nav aria-label="Navigasi utama">{links}</nav>
 </header>
 <main id="isi">
@@ -210,9 +226,11 @@ def build_units():
             sid = SECTION_IDS.get(title, re.sub(r"\W+", "-", title.lower()))
             toc.append(f'<li><a href="#{sid}">{esc(title)}<span lang="th">{SECTION_TH.get(sid, "")}</span></a></li>')
             inner = quiz_html(parse_quiz(content), n) if sid == "kuiz" else render_content(content)
-            parts.append(f'<section class="block" id="{sid}"><h2>{esc(title)}</h2>{inner}</section>')
-        prev_l = f'<a class="pn prev" href="{n-1:02d}.html"><small>Sebelumnya</small>{esc(units[n-1][0]["title"])}</a>' if n > 1 else "<span></span>"
-        next_l = f'<a class="pn next" href="{n+1:02d}.html"><small>Seterusnya</small>{esc(units[n+1][0]["title"])}</a>' if n < 20 else "<span></span>"
+            parts.append(f'<section class="block" id="{sid}"><h2>{esc(title)}<small lang="th">{SECTION_TH.get(sid, "")}</small></h2>{inner}</section>')
+        prev_l = (f'<a class="prev" href="{n-1:02d}.html" rel="prev"><small>← Pertemuan {n-1}</small>{esc(units[n-1][0]["title"])}</a>' if n > 1
+                  else '<a class="prev" href="../index.html#kandungan"><small>← Kandungan</small>Kandungan</a>')
+        next_l = (f'<a class="next" href="{n+1:02d}.html" rel="next"><small>Pertemuan {n+1} →</small>{esc(units[n+1][0]["title"])}</a>' if n < 20
+                  else '<a class="next" href="../index.html#penilaian"><small>Akhir buku →</small>Penilaian</a>')
         dl = ""
         if meta.get("docx"):
             dl += f'<a class="btn" href="https://drive.google.com/file/d/{meta["docx"]}/view" target="_blank" rel="noopener">Nota kuliah penuh (Word)</a>'
@@ -221,12 +239,14 @@ def build_units():
         prep = meta.get("penyediaan", "—")
         prep_html = f'<div><dt>Penyediaan bahan</dt><dd>{esc(prep)}</dd></div>' if prep not in ("", "—") else ""
         note17 = '<p class="flag">Tarikh dalam reka bentuk kursus sama dengan Pertemuan 16 — sila semak dengan penyelaras.</p>' if n == 17 else ""
+        phase = next(name for a_, b_, name in PHASES if a_ <= n <= b_)
         body = f"""
-<article class="unit">
-  <header class="unit-hero">
-    <p class="unit-num"><span>Pertemuan {n}</span> <time datetime="{iso}">{date}</time></p>
+<article class="sheet unit">
+  {running(f"Pertemuan {n} · {esc(meta['title'])}")}
+  <header class="opener">
+    <p class="op-k">Pertemuan {n} · <time datetime="{iso}">{date}</time></p>
     <h1>{esc(meta['title'])}</h1>
-    <p class="unit-th" lang="th">{esc(meta.get('th',''))}</p>
+    <p class="th-title" lang="th">{esc(meta.get('th',''))}</p>
     {note17}
     <dl class="unit-meta">
       <div><dt>Pengajar</dt><dd>{esc(teacher)}</dd></div>
@@ -236,80 +256,106 @@ def build_units():
     </dl>
     <div class="actions">{dl}</div>
   </header>
-  <div class="unit-body">
-    <nav class="toc" aria-label="Bahagian pelajaran"><ol>{''.join(toc)}</ol></nav>
-    <div class="unit-main">{''.join(parts)}</div>
-  </div>
-  <nav class="prevnext" aria-label="Pertemuan lain">{prev_l}{next_l}</nav>
-</article>"""
+  <nav class="sec-nav" aria-label="Bahagian pelajaran"><ol>{''.join(toc)}</ol></nav>
+  {''.join(parts)}
+  <p class="part-note">{esc(phase)}</p>
+  {folio(n)}
+</article>
+<nav class="pager" aria-label="Pertemuan sebelum dan seterusnya">{prev_l}{next_l}</nav>"""
         (out_dir / f"{n:02d}.html").write_text(
             page(f"P{n}: {meta['title']} — Kursus BM Online", body, 1, f"Pertemuan {n}: {meta['title']}"), encoding="utf-8")
     return units
 
 
 def build_index(units):
-    rows = []
+    contents, sched = [], []
     for a, b, name in PHASES:
-        items = []
+        items, srows = [], []
         for n in range(a, b + 1):
             iso, date, teacher, focus, activity = SCHEDULE[n]
-            t = units[n][0]["title"]
-            items.append(f"""<li class="session" data-date="{iso}">
-  <a href="pertemuan/{n:02d}.html">
-    <span class="s-num">{n}</span>
-    <span class="s-date"><time datetime="{iso}">{date}</time></span>
-    <span class="s-title">{esc(t)}<span lang="th">{esc(units[n][0].get('th',''))}</span></span>
-    <span class="s-focus">{esc(focus)}</span>
-    <span class="s-teacher">{esc(teacher)}</span>
-  </a></li>""")
-        rows.append(f'<section class="phase"><h3><span>Pertemuan {a}–{b}</span>{esc(name)}</h3><ol class="sessions">{"".join(items)}</ol></section>')
+            t, th = units[n][0]["title"], units[n][0].get("th", "")
+            items.append(f"""<li class="session" data-date="{iso}"><a href="pertemuan/{n:02d}.html">
+  <span class="toc-k">Pertemuan {n}<small><time datetime="{iso}">{date}</time></small></span>
+  <span class="toc-t">{esc(t)}<small lang="th">{esc(th)}</small></span><span class="toc-dots"></span><span class="toc-pg">{n}</span></a></li>""")
+            srows.append(f'<tr data-date="{iso}"><td class="n"><a href="pertemuan/{n:02d}.html">{n}</a></td><td><time datetime="{iso}">{date}</time></td>'
+                         f'<td><a href="pertemuan/{n:02d}.html">{esc(t)}</a><span class="td-th" lang="th">{esc(th)}</span></td><td>{esc(focus)}</td><td>{esc(teacher)}</td></tr>')
+        contents.append(f'<li class="toc-part"><span>Bahagian {len(contents)+1} · Pertemuan {a}–{b}</span>{esc(name)}</li>' + "".join(items))
+        sched.append(f'<tbody><tr class="ph"><th colspan="5">Bahagian {len(sched)+1} · {esc(name)}</th></tr>{"".join(srows)}</tbody>')
+    front = "".join(f'<li class="toc-front"><a href="{h}"><span class="toc-t">{m}<small lang="th">{t}</small></span><span class="toc-dots"></span><span class="toc-pg">{f}</span></a></li>'
+                    for h, m, t, f in [("#pengenalan", "Pengenalan Kursus", "แนะนำหลักสูตร", "ii"), ("#jadual", "Jadual Kelas", "ตารางเรียน", "iii"), ("#penilaian", "Cara Penilaian", "การประเมินผล", "iv")])
     vocab = vocab_rows(units)
     sched_json = json.dumps({n: [SCHEDULE[n][0], units[n][0]["title"], SCHEDULE[n][1], SCHEDULE[n][2]] for n in SCHEDULE})
     body = f"""
-<section class="hero">
-  <div class="hero-text">
-    <h1>Bahasa Melayu Standard, satu Ahad demi satu Ahad.</h1>
+<section class="cover-wrap">
+  <div class="cover" role="img" aria-label="Kulit buku: Kursus Bahasa Melayu Online, Tahap Permulaan">
+    <div class="cv-frame">
+      <p class="cv-top"><span>Kursus Bahasa Melayu Secara Dalam Talian</span><span class="cv-th" lang="th">หลักสูตรภาษามลายูออนไลน์</span></p>
+      <div class="cv-mid">
+        <p class="cv-year">Tahap Permulaan · <span lang="th">ระดับเริ่มต้น</span></p>
+        <p class="cv-title">Bahasa Melayu<br>Standard</p>
+        <p class="cv-sub">20 Pertemuan · 30 Jam</p>
+      </div>
+      <p class="cv-author"><span>1 November 2026 – 7 Mac 2027</span><span class="cv-th">Setiap Ahad, 2.00–3.30 petang (Masa Patani)</span></p>
+    </div>
+  </div>
+  <div class="cover-side">
+    <h1 class="side-h">Bahasa Melayu Standard, satu Ahad demi satu Ahad.</h1>
     <p class="lede">Kursus dalam talian 20 pertemuan untuk peserta di Selatan Thai. Setiap pertemuan membawa satu tema kehidupan seharian, lengkap dengan kosa kata Melayu–Thai, dialog, tatabahasa dan kuiz kendiri.</p>
-    <div class="actions"><a class="btn" href="#jadual">Lihat jadual kelas</a><a class="btn-ghost" href="pertemuan/01.html">Mula dari Pertemuan 1</a></div>
+    <div class="actions"><a class="btn" href="#kandungan">Buka buku</a><a class="btn-ghost" href="pertemuan/01.html">Mula Pertemuan 1</a></div>
+    <section class="next" id="kelas-seterusnya" hidden>
+      <p class="next-label">Kelas seterusnya</p>
+      <p class="next-body"><a id="next-link" href="#"></a></p>
+    </section>
+    <figure class="contrast word" aria-live="polite">
+      <p class="word-label">Kata hari ini</p>
+      <div class="pair"><span class="std" id="w-ms">{esc(vocab[0][0])}</span><span class="th" id="w-th" lang="th">{esc(vocab[0][1])}</span></div>
+      <figcaption id="w-ex">{esc(vocab[0][2])}</figcaption>
+      <div class="word-foot"><button type="button" class="btn-ghost" id="w-next">Kata lain</button><a id="w-link" href="pertemuan/{vocab[0][3]:02d}.html">Dari Pertemuan {vocab[0][3]}</a></div>
+    </figure>
   </div>
-  <figure class="contrast word" aria-live="polite">
-    <p class="word-label">Kata hari ini</p>
-    <div class="pair"><span class="std" id="w-ms">{esc(vocab[0][0])}</span><span class="th" id="w-th" lang="th">{esc(vocab[0][1])}</span></div>
-    <figcaption id="w-ex">{esc(vocab[0][2])}</figcaption>
-    <div class="word-foot"><button type="button" class="btn-ghost" id="w-next">Kata lain</button><a id="w-link" href="pertemuan/{vocab[0][3]:02d}.html">Dari Pertemuan {vocab[0][3]}</a></div>
-  </figure>
 </section>
 
-<section class="next" id="kelas-seterusnya" hidden>
-  <p class="next-label">Kelas seterusnya</p>
-  <p class="next-body"><a id="next-link" href="#"></a></p>
-</section>
+<article class="sheet" id="kandungan">
+  {running("Kandungan")}
+  <h2 class="sheet-title">Kandungan<small lang="th">สารบัญ</small></h2>
+  {ORN}
+  <ol class="toc">{front}{''.join(contents)}</ol>
+  {folio("i")}
+</article>
 
-<section class="facts" aria-label="Butiran kursus">
-  <dl>
-    <div><dt>Tempoh</dt><dd>30 jam (20 pertemuan, 1 jam 30 minit setiap satu)</dd></div>
-    <div><dt>Tarikh</dt><dd>1 November 2026 – 7 Mac 2027</dd></div>
-    <div><dt>Waktu</dt><dd>Setiap Ahad, 2.00–3.30 petang (Masa Patani)</dd></div>
-    <div><dt>Platform</dt><dd>Zoom / Google Meet / Microsoft Teams</dd></div>
-  </dl>
-</section>
-
-<section class="schedule" id="jadual">
-  <h2>Jadual 20 pertemuan</h2>
-  <p class="sub">Klik pada pertemuan untuk membuka kosa kata, dialog, tatabahasa, latihan dan kuiz kendiri.</p>
-  {''.join(rows)}
-</section>
-
-<section class="unique">
-  <h2>Keunikan modul</h2>
+<article class="sheet" id="pengenalan">
+  {running("Pengenalan Kursus")}
+  <h2 class="sheet-title">Pengenalan Kursus<small lang="th">แนะนำหลักสูตร</small></h2>
+  {ORN}
+  <section class="facts" aria-label="Butiran kursus">
+    <dl>
+      <div><dt>Tempoh</dt><dd>30 jam (20 pertemuan, 1 jam 30 minit setiap satu)</dd></div>
+      <div><dt>Tarikh</dt><dd>1 November 2026 – 7 Mac 2027</dd></div>
+      <div><dt>Waktu</dt><dd>Setiap Ahad, 2.00–3.30 petang (Masa Patani)</dd></div>
+      <div><dt>Platform</dt><dd>Zoom / Google Meet / Microsoft Teams</dd></div>
+    </dl>
+  </section>
+  <h3>Keunikan modul</h3>
   <div class="two">
-    <div><h3>Dwibahasa Melayu–Thai</h3><p>Setiap kosa kata, frasa dan contoh ayat disertakan terjemahan bahasa Thai, supaya peserta faham makna dengan cepat dan boleh mengulang kaji sendiri di rumah.</p></div>
-    <div><h3>Fokus dalam talian</h3><p>Alat digital yang interaktif — Kahoot, Quizizz, Wordwall, Breakout Rooms — supaya peserta di Selatan Thai seronok belajar dan tidak terbeban.</p></div>
+    <div><h4>Dwibahasa Melayu–Thai</h4><p>Setiap kosa kata, frasa dan contoh ayat disertakan terjemahan bahasa Thai, supaya peserta faham makna dengan cepat dan boleh mengulang kaji sendiri di rumah.</p></div>
+    <div><h4>Fokus dalam talian</h4><p>Alat digital yang interaktif — Kahoot, Quizizz, Wordwall, Breakout Rooms — supaya peserta di Selatan Thai seronok belajar dan tidak terbeban.</p></div>
   </div>
-</section>
+  {folio("ii")}
+</article>
 
-<section class="assess" id="penilaian">
-  <h2>Cara penilaian</h2>
+<article class="sheet" id="jadual">
+  {running("Jadual Kelas")}
+  <h2 class="sheet-title">Jadual Kelas<small lang="th">ตารางเรียน</small></h2>
+  {ORN}
+  <p class="sub">Klik pada tajuk pertemuan untuk membuka kosa kata, dialog, tatabahasa, latihan dan kuiz kendiri.</p>
+  <div class="table-wrap"><table class="sched"><thead><tr><th>#</th><th>Tarikh</th><th>Tajuk</th><th>Fokus kemahiran</th><th>Pengajar</th></tr></thead>{''.join(sched)}</table></div>
+  {folio("iii")}
+</article>
+
+<article class="sheet assess" id="penilaian">
+  {running("Cara Penilaian")}
+  <h2 class="sheet-title">Cara Penilaian<small lang="th">การประเมินผล</small></h2>
+  {ORN}
   <div class="two">
     <div>
       <h3>Formatif (berterusan) — 60%</h3>
@@ -327,11 +373,12 @@ def build_index(units):
       </ul>
     </div>
   </div>
-</section>
+  {folio("iv")}
+</article>
 <script>window.SCHEDULE = {sched_json}; window.VOCAB = {json.dumps(vocab, ensure_ascii=False)};</script>
 """
     (ROOT / "index.html").write_text(page("Kursus Bahasa Melayu Online — Tahap Permulaan", body, 0,
-        "Kursus Bahasa Melayu secara dalam talian (tahap permulaan) untuk penutur Melayu Selatan Thai."), encoding="utf-8")
+        "Kursus Bahasa Melayu secara dalam talian (tahap permulaan) untuk penutur Melayu Selatan Thai.", "utama"), encoding="utf-8")
 
 
 if __name__ == "__main__":
