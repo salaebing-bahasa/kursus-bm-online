@@ -212,6 +212,11 @@ JW_BTN = ('<button type="button" class="btn-ghost jw-toggle" aria-pressed="true"
           '<span class="bi"><span>Tulisan Jawi</span><span class="tr" lang="th">แสดงอักษรยาวี</span></span></button>')
 
 
+# Nota sumber ejaan Jawi (dipaparkan di halaman pertemuan dan dalam PDF)
+JW_NOTE = ('<p class="jw-note">Ejaan Jawi dalam laman ini mengikut sistem ejaan Jawi Dewan Bahasa dan Pustaka (DBP), Malaysia. '
+           '<span lang="th">การสะกดอักษรยาวีในเว็บไซต์นี้ใช้ระบบการสะกดยาวีของ Dewan Bahasa dan Pustaka (DBP) ประเทศมาเลเซีย</span></p>')
+
+
 def jw_report():
     """Cetak kata yang dieja secara automatik (belum ada dalam _src/jawi.tsv)."""
     if MISSES:
@@ -318,6 +323,7 @@ def page(title, body, depth=0, desc="", active="", path=""):
 </main>
 <footer class="site-foot">
   <p>Kursus Bahasa Melayu Secara Online (Tahap Permulaan), 1 November 2026 hingga 7 Mac 2027, setiap Ahad 2.00–3.30 petang (Masa Patani).</p>
+  <p>Ejaan Jawi mengikut sistem ejaan Jawi Dewan Bahasa dan Pustaka (DBP), Malaysia · <span lang="th">การสะกดอักษรยาวีใช้ระบบของ Dewan Bahasa dan Pustaka (DBP)</span></p>
   <p>Bahan disediakan oleh pasukan pengajar kursus. Laman ini dikendalikan oleh Asst. Prof. Muhammad Salaebing, Universiti Thaksin.</p>
 </footer>
 <script src="{p}assets/app.js" defer></script>
@@ -372,6 +378,7 @@ def build_units():
       {prep_html}
     </dl>
     <div class="actions">{dl}{JW_BTN}</div>
+    {JW_NOTE}
   </header>
   <nav class="sec-nav" aria-label="Bahagian pelajaran"><ol>{''.join(toc)}</ol></nav>
   {''.join(parts)}
