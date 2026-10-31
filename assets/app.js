@@ -72,7 +72,7 @@
           opts.forEach(function (x) { x.disabled = true; });
           opts[ans].classList.add("right");
           if (pick === ans) { q.classList.add("correct"); fb.textContent = "Betul!"; fb.className = "fb ok"; }
-          else { o.classList.add("wrong"); fb.textContent = "Kurang tepat. Jawapan yang betul: " + opts[ans].textContent; fb.className = "fb no"; }
+          else { o.classList.add("wrong"); fb.textContent = "Kurang tepat. Jawapan yang betul: " + (opts[ans].querySelector(".rm") || opts[ans]).textContent; fb.className = "fb no"; }
           update();
         });
       });
@@ -101,6 +101,18 @@
       });
     }, { rootMargin: "-20% 0px -70% 0px" });
     document.querySelectorAll(".block").forEach(function (s) { io.observe(s); });
+  }
+
+  // 5. Tunjuk / sembunyi baris tulisan Jawi
+  var jb = document.querySelector(".jw-toggle"), docEl = document.documentElement;
+  if (jb) {
+    var setJw = function (on) {
+      docEl.classList.toggle("no-jw", !on);
+      jb.setAttribute("aria-pressed", on ? "true" : "false");
+      try { localStorage.setItem("jawi", on ? "1" : "0"); } catch (e) {}
+    };
+    jb.setAttribute("aria-pressed", docEl.classList.contains("no-jw") ? "false" : "true");
+    jb.addEventListener("click", function () { setJw(docEl.classList.contains("no-jw")); });
   }
 
 })();

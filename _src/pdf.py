@@ -20,7 +20,7 @@ def local_fonts(page):
     """Jika Google Fonts tidak dapat dicapai, guna fail fon @fontsource setempat."""
     base = Path(FONT_DIR)
     css = []
-    for pkg, weights in (("sarabun", ["400", "600", "400-italic"]), ("bai-jamjuree", ["500", "600", "700"])):
+    for pkg, weights in (("sarabun", ["400", "600", "400-italic"]), ("bai-jamjuree", ["500", "600", "700"]), ("noto-naskh-arabic", ["400", "600"])):
         for w in weights:
             t = (base / pkg / f"{w}.css").read_text()
             css.append(re.sub(r"url\(\./files/([^)]+)\)", rf"url(https://fonts.gstatic.com/local/{pkg}/\1)", t))
@@ -47,7 +47,7 @@ def main():
             n = int(f.stem)
             page.goto(f"http://127.0.0.1:{port}/pertemuan/{f.name}", wait_until="networkidle")
             page.evaluate("document.fonts.ready")
-            title = page.locator(".opener h1").inner_text()
+            title = page.evaluate("document.querySelector('.opener h1').firstChild.textContent.trim()")
             head = (f'<div style="font:8.5px Sarabun,sans-serif;color:#6b5a66;width:100%;padding:0 14mm;display:flex;justify-content:space-between">'
                     f'<span>Kursus Bahasa Melayu Online · Tahap Permulaan</span><span>Pertemuan {n} · {title}</span></div>')
             foot = ('<div style="font:9px Sarabun,sans-serif;color:#6b5a66;width:100%;text-align:center">'

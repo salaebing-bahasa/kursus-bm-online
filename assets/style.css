@@ -24,6 +24,7 @@
   --measure: 72ch;
   --f-head: "Bai Jamjuree", "Sarabun", system-ui, sans-serif;
   --f-body: "Sarabun", system-ui, sans-serif;
+  --f-jawi: "Noto Naskh Arabic", "Amiri", "Traditional Arabic", serif;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -345,3 +346,17 @@ td:first-child { font-weight: 600; }
   .block { padding-bottom: .8rem; }
   a { color: inherit; text-decoration: none; }
 }
+
+/* Tulisan Jawi — baris Jawi di bawah setiap teks Melayu */
+.jw { display: block; margin-top: .2em; font: 400 1.12em/1.95 var(--f-jawi); color: var(--ink-soft); text-align: start; word-spacing: .08em; }
+h1 .jw, h2 .jw, h3 .jw { font-weight: 600; color: inherit; font-size: .78em; line-height: 1.8; }
+.opener .jw, .opener dd .jw { text-align: center; }
+.turn-b .said .jw { color: inherit; }
+.q > .jw { margin: 0 .3rem .6rem; }
+.opt .rm, .opt .jw { display: block; }
+.opt.right .jw, .opt.wrong .jw { color: inherit; }
+.jw-mark { font: 600 1.35rem/1 var(--f-jawi); margin-right: .45rem; }
+.jw-toggle[aria-pressed="false"] { opacity: .85; border-style: dashed; }
+.jw-toggle[aria-pressed="false"] .jw-mark { text-decoration: line-through; }
+.no-jw .jw { display: none; }
+
