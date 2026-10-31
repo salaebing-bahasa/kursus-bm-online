@@ -13,6 +13,7 @@ Ubah fail `_src/units/NN.md`, kemudian jalankan `python3 _src/build.py`.
 Jadual (tarikh, pengajar, fokus) ada dalam `SCHEDULE` di `_src/build.py`.
 
 ### Tulisan Jawi
+Ejaan Jawi mengikut sistem ejaan Jawi Dewan Bahasa dan Pustaka (DBP), Malaysia; nota ini dipaparkan di setiap halaman pertemuan, dalam PDF dan di kaki laman.
 Setiap teks Melayu dalam halaman pertemuan dipaparkan bersama baris Jawi (butang "Tulisan Jawi" untuk tunjuk/sembunyi).
 Ejaan diambil daripada `_src/jawi.tsv` (lajur `rumi`, `jawi`, `sumber`: `buku` = disemak dalam buku อต.1–6, `kamus` = senarai Rumi–Jawi, `semak` = dieja oleh pembina dan perlu disemak).
 Untuk membetulkan ejaan, ubah lajur `jawi` dalam fail itu dan jalankan semula `python3 _src/build.py` (kata yang tiada dalam fail akan disenaraikan semasa membina).

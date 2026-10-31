@@ -359,4 +359,6 @@ h1 .jw, h2 .jw, h3 .jw { font-weight: 600; color: inherit; font-size: .78em; lin
 .jw-toggle[aria-pressed="false"] { opacity: .85; border-style: dashed; }
 .jw-toggle[aria-pressed="false"] .jw-mark { text-decoration: line-through; }
 .no-jw .jw { display: none; }
-
+.jw-note { margin: .9rem auto 0; max-width: 60ch; font-size: .92rem; color: var(--ink-soft); }
+.jw-note span { display: block; }
+.no-jw .jw-note { display: none; }
