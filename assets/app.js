@@ -8,7 +8,7 @@
     function show(i) {
       var v = V[i];
       document.getElementById("w-ms").textContent = v[0];
-      document.getElementById("w-th").textContent = v[1];
+      document.getElementById("w-jw").textContent = v[1];
       document.getElementById("w-ex").textContent = v[2];
       var link = document.getElementById("w-link");
       link.href = "pertemuan/" + String(v[3]).padStart(2, "0") + ".html";

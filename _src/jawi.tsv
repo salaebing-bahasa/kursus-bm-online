@@ -41,8 +41,10 @@ aku	اکو	kamus
 ala	الا	kamus
 alahan	الهن	kamus
 alam	عالم	kamus
+alamat	عالمت	semak
 alang	الڠ	kamus
 alangkah	الڠکه	kamus
+alas	الس	semak
 alasan	السن	kamus
 alat	الت	kamus
 alhamdulillah	الحمدالله	kamus
@@ -165,6 +167,7 @@ bawa	باوا	kamus
 bawah	باوه	kamus
 bawahnya	باوهڽ	kamus
 bayar	باير	kamus
+bayaran	بايرن	semak
 beberapa	ببراڤ	kamus
 beg	بيݢ	buku
 begitu	بݢيتو	kamus
@@ -178,6 +181,7 @@ beli	بلي	kamus
 beliau	بلياو	kamus
 belok	بلوق	kamus
 belum	بلوم	kamus
+benang	بنڠ	semak
 benci	بنچي	kamus
 benda	بندا	kamus
 bengkak	بڠکق	kamus
@@ -228,6 +232,7 @@ bererti	برارتي	kamus
 berfungsi	برفوڠسي	kamus
 bergambar	برݢمبر	kamus
 bergaris	برݢاريس	kamus
+bergerak	برݢرق	semak
 bergotong	برݢوتوڠ	kamus
 bergotong-royong	برݢوتوڠ-رويوڠ	kamus
 berguna	برݢونا	kamus
@@ -276,6 +281,7 @@ bermula	برمولا	kamus
 bernafas	برنفس	kamus
 bernama	برنام	kamus
 berpakaian	برڤاکاين	kamus
+berpanjangan	برڤنجڠن	semak
 berpengalaman	برڤڠالمن	kamus
 berpindah	برڤينده	kamus
 berpisah	برڤيسه	kamus
@@ -289,6 +295,7 @@ bersedia	برسديا	kamus
 bersejarah	برسجاره	kamus
 bersenam	برسنم	kamus
 bersih	برسيه	buku
+bersikap	برسيکڤ	semak
 bersin	برسين	kamus
 bersolat	برصلاة	buku
 bersuara	برسوارا	kamus
@@ -309,6 +316,7 @@ bertuahnya	برتواهڽ	semak
 bertutur	برتوتور	kamus
 berubah	بروبه	kamus
 berumur	برعمور	kamus
+berus	بروس	semak
 berwarna	برورنا	kamus
 berziarah	برزياره	kamus
 besar	بسر	buku
@@ -360,6 +368,7 @@ buku	بوکو	buku
 bulan	بولن	kamus
 bulat	بولت	kamus
 bulatan	بولتن	kamus
+bulu	بولو	semak
 bumbung	بومبوڠ	kamus
 bundar	بوندر	kamus
 bunga	بوڠا	buku
@@ -399,6 +408,7 @@ cetak	چيتق	kamus
 chat	چت	semak
 cik	چيق	kamus
 cikgu	چيقݢو	kamus
+cili	چيلي	semak
 cina	چينا	kamus
 ciri	چيري	kamus
 cirit	چيريت	kamus
@@ -442,6 +452,7 @@ deepavali	ديڤاۏالي	kamus
 dekat	دکت	kamus
 demam	دمم	kamus
 demi	دمي	kamus
+denda	دندا	semak
 dengan	دڠن	kamus
 dengar	دڠر	kamus
 depan	دڤن	kamus
@@ -469,6 +480,7 @@ diguna	دݢونا	kamus
 digunakan	دݢوناکن	kamus
 dihantar	دهانتر	kamus
 dihidang	دهيدڠ	semak
+diiktiraf	دإعتيراف	semak
 dijadikan	دجاديکن	kamus
 dijana	دجان	kamus
 dijangka	دجڠک	kamus
@@ -486,11 +498,14 @@ dina	دينا	kamus
 dinasihatkan	دنصيحتکن	kamus
 dinding	دينديڠ	kamus
 dingin	ديڠين	kamus
+dipahat	دڤاهت	semak
 dipakai	دڤاکاي	kamus
 dipanggil	دڤڠݢيل	kamus
 dipelajari	دڤلاجري	kamus
 dipengaruhi	دڤڠاروهي	kamus
 diperbuat	دڤربوات	semak
+diperiksa	دڤريقسا	semak
+diperintah	دڤرينته	semak
 diperkenalkan	دڤرکنلکن	kamus
 diramal	درامل	kamus
 diramalkan	دراملکن	kamus
@@ -689,6 +704,7 @@ ia	اي	kamus
 ialah	اياله	kamus
 iban	ايبن	semak
 ibu	ايبو	buku
+ibunda	ايبوندا	semak
 ibunya	ايبوڽ	kamus
 id	ايد	kamus
 ikan	ايکن	buku
@@ -717,6 +733,7 @@ interaktif	اينترکتيف	kamus
 internet	اينترنيت	kamus
 intonasi	اينتوناسي	kamus
 ipar	ايڤر	kamus
+irama	ايراما	semak
 irfan	عرفان	semak
 is	ايس	kamus
 isi	ايسي	kamus
@@ -744,10 +761,12 @@ jambatan	جمبتن	kamus
 jambu	جمبو	kamus
 jangan	جاڠن	kamus
 janji	جنجي	kamus
+jantung	جنتوڠ	semak
 januari	جانواري	kamus
 jarak	جارق	kamus
 jarang	جارڠ	kamus
 jari	جاري	buku
+jarum	جاروم	semak
 jauh	جاءوه	kamus
 jawab	جواب	kamus
 jawapan	جواڤن	kamus
@@ -819,10 +838,12 @@ kebahagiaan	کبهاݢياءن	kamus
 kebangsaan	کبڠساءن	kamus
 kebanyakan	کباڽقن	kamus
 kebanyakannya	کباڽقنڽ	kamus
+keberadaan	کبراداءن	semak
 kecil	کچيل	buku
 kedah	کده	kamus
 kedai	کداي	buku
 kedatangan	کداتڠن	kamus
+kedengaran	کدڠرن	semak
 kedu	کدو	kamus
 kedua	کدوا	kamus
 kedua-dua	کدوا-دوا	kamus
@@ -897,7 +918,9 @@ ketiga	کتيݢ	kamus
 ketika	کتيک	kamus
 ketupat	کتوڤت	buku
 keunikan	کأونيکن	kamus
+keuntungan	کأونتوڠن	semak
 kewajipan	کواجيڤن	kamus
+kewujudan	کوجودن	semak
 keyakinan	کيقينن	kamus
 kh	خ	buku
 khabar	خبر	buku
@@ -1008,10 +1031,12 @@ lazat	لاذت	kamus
 lebat	لبت	kamus
 lebih	لبيه	kamus
 leher	ليهير	kamus
+lelah	لله	semak
 lelaki	للاکي	kamus
 lelangit	للاڠيت	kamus
 lemak	لمق	kamus
 lembap	لمبڤ	kamus
+lembut	لمبوت	semak
 lengkap	لڠکڤ	kamus
 lengkapkan	لڠکڤکن	semak
 lepas	لڤس	kamus
@@ -1020,6 +1045,7 @@ letak	لتق	kamus
 letih	لتيه	kamus
 letupan	لتوڤن	kamus
 lewat	ليوات	kamus
+liat	ليات	semak
 lidah	ليده	kamus
 lif	ليف	kamus
 lihat	ليهت	kamus
@@ -1152,6 +1178,7 @@ membuat	ممبوات	kamus
 membuatkan	ممبواتکن	kamus
 membuka	ممبوک	kamus
 memerihalkan	ممريحالکن	kamus
+memeriksa	ممريقسا	semak
 memerlukan	ممرلوکن	kamus
 memesan	ممسن	kamus
 memhantar	ممهنتر	semak
@@ -1179,6 +1206,7 @@ menarik	مناريق	kamus
 menasihati	منصيحتي	kamus
 menawar	مناور	kamus
 mencabar	منچابر	kamus
+mencantumkan	منچنتومکن	semak
 mencapai	منچاڤاي	kamus
 mencapainya	منچاڤايڽ	kamus
 mencari	منچاري	kamus
@@ -1252,6 +1280,7 @@ menjawab	منجواب	kamus
 menjelaskan	منجلسکن	kamus
 menjual	منجوال	kamus
 menolak	منولق	kamus
+menolong	منولوڠ	semak
 menonton	منونتون	kamus
 mensediakan	منسدياکن	semak
 menterjemah	منترجمه	kamus
@@ -1261,7 +1290,9 @@ menulis	منوليس	buku
 menunjuk	منونجوق	kamus
 menunjukkan	منونجوقکن	kamus
 menunya	مينوڽ	semak
+menutup	منوتوڤ	semak
 menyabung	مڽابوڠ	kamus
+menyalin	مڽالين	semak
 menyambung	مڽامبوڠ	kamus
 menyambut	مڽمبوت	kamus
 menyambutnya	مڽمبوتڽ	kamus
@@ -1318,6 +1349,7 @@ mis	ميس	semak
 modul	مودول	kamus
 mohon	موهون	kamus
 montaj	مونتج	kamus
+moyang	مويڠ	semak
 muat	موات	kamus
 mudah	موده	kamus
 muih	موءيه	kamus
@@ -1351,8 +1383,10 @@ nanti	ننتي	kamus
 nasal	ناسل	semak
 nasi	ناسي	buku
 nasihat	نصيحت	kamus
+natural	ناتورل	semak
 negara	نݢارا	kamus
 negatif	نيݢاتيف	kamus
+negeri	نݢري	semak
 nelayan	نلاين	kamus
 nenek	نينيق	buku
 neutral	نيوترل	kamus
@@ -1460,6 +1494,7 @@ pemburu	ڤمبورو	kamus
 pemeri	ڤمري	kamus
 pemeriksaan	ڤمريقساءن	kamus
 pemilik	ڤميليق	kamus
+pemilikan	ڤميليقن	semak
 penanda	ڤنندا	kamus
 penang	ڤينڠ	semak
 penarafan	ڤنرفن	kamus
@@ -1493,15 +1528,18 @@ pengsan	ڤيڠسن	kamus
 penguat	ڤڠوات	kamus
 pengubat	ڤڠوبت	kamus
 pengukuhan	ڤڠوکوهن	kamus
+pengukur	ڤڠوکور	semak
 peniaga	ڤنياݢ	kamus
 penilai	ڤنيلاي	kamus
 penilaian	ڤنيلاين	kamus
 pening	ڤنيڠ	kamus
+peninggalan	ڤنيڠݢالن	semak
 penjajahan	ڤنجاجهن	kamus
 penjelasan	ڤنجلسن	kamus
 penjodoh	ڤنجودوه	kamus
 penjual	ڤنجوال	buku
 penonton	ڤنونتون	kamus
+pensel	ڤنسيل	semak
 pensyarah	ڤنشره	kamus
 pentadbir	ڤنتدبير	kamus
 penterjemah	ڤنترجمه	kamus
@@ -1632,6 +1670,8 @@ putih	ڤوتيه	buku
 ra	راء	kamus
 rabu	رابو	buku
 radio	راديو	kamus
+rahsia	رهسيا	semak
+raja	راج	semak
 rajin	راجين	buku
 rajinnya	راجينڽ	kamus
 rakam	رقم	kamus
@@ -1738,6 +1778,7 @@ saudara-mara	ساودارا-مارا	kamus
 saya	ساي	buku
 sayang	سايڠ	kamus
 sayur	سايور	buku
+se	س	semak
 sebab	سبب	kamus
 sebagai	سباݢاي	kamus
 sebaik	سباءيق	kamus
@@ -1779,6 +1820,7 @@ sekali	سکالي	kamus
 sekalian	سکالين	kamus
 sekampus	سکامڤوس	semak
 sekarang	سکارڠ	kamus
+sekatan	سکتن	semak
 sekejap	سکجڤ	kamus
 sekelas	سکلس	kamus
 sekeluarga	سکلوارݢ	kamus
@@ -1821,6 +1863,7 @@ sempurna	سمڤورنا	kamus
 semua	سموا	kamus
 semuanya	سمواڽ	kamus
 semula	سمولا	kamus
+senaman	سنامن	semak
 senang	سنڠ	kamus
 senangnya	سنڠڽ	kamus
 senarai	سناراي	kamus
@@ -1850,6 +1893,7 @@ seru	سرو	kamus
 seruan	سروان	kamus
 sesak	سسق	kamus
 sesama	سسام	kamus
+sesekali	سسکالي	semak
 seseorang	سسأورڠ	kamus
 sesi	سيسي	kamus
 sesiapa	سسياڤا	kamus
@@ -2033,6 +2077,7 @@ terkenal	ترکنل	kamus
 terlalu	ترلالو	kamus
 terlambat	ترلمبت	kamus
 terletak	ترلتق	kamus
+terlibat	ترليبت	semak
 termasuk	ترماسوق	kamus
 terputus	ترڤوتوس	kamus
 tersebar	ترسيبار	kamus
@@ -2092,6 +2137,7 @@ tunggal	توڠݢل	kamus
 tunggu	توڠݢو	kamus
 tunjuk	تونجوق	kamus
 tunjukkan	تونجوقکن	kamus
+tuntutan	تونتوتن	semak
 turun	تورون	kamus
 turut	توروت	kamus
 tus	توس	kamus
@@ -2118,6 +2164,7 @@ ungu	اوڠو	kamus
 unit	اونيت	kamus
 universiti	اونيۏرسيتي	kamus
 untuk	اونتوق	kamus
+untung	اونتوڠ	semak
 upload	اڤلود	semak
 urutan	اوروتن	kamus
 usahawan	اوسهاون	kamus

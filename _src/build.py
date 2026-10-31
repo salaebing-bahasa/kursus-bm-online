@@ -50,8 +50,6 @@ SCHEDULE = {
 
 SECTION_IDS = {"Objektif Pembelajaran": "objektif", "Kosa Kata": "kosa-kata", "Perbualan": "perbualan",
                "Tatabahasa": "tatabahasa", "Latihan": "latihan", "Kuiz": "kuiz"}
-SECTION_TH = {"objektif": "วัตถุประสงค์", "kosa-kata": "คำศัพท์", "perbualan": "บทสนทนา",
-              "tatabahasa": "ไวยากรณ์", "latihan": "แบบฝึกหัด", "kuiz": "แบบทดสอบ"}
 
 esc = html.escape
 
@@ -126,7 +124,7 @@ def lbl(heads, i):
 
 
 def label_tables(h):
-    """ใส่ data-label (หัวคอลัมน์) ให้ทุก <td> และห่อตารางด้วยกล่องที่เลื่อนได้และโฟกัสได้"""
+    """Letak data-label (tajuk lajur) pada setiap <td> dan balut jadual dalam kotak yang boleh ditatal dan difokus."""
     def one(m):
         t = m.group(0)
         heads = [re.sub(r"<[^>]+>", "", x).strip() for x in re.findall(r"<th[^>]*>(.*?)</th>", t, flags=re.S)]
@@ -209,12 +207,11 @@ def add_jawi(fragment):
 # Butang tunjuk/sembunyi baris Jawi (pilihan disimpan dalam pelayar)
 JW_BTN = ('<button type="button" class="btn-ghost jw-toggle" aria-pressed="true">'
           '<span class="jw-mark" aria-hidden="true">ج</span>'
-          '<span class="bi"><span>Tulisan Jawi</span><span class="tr" lang="th">แสดงอักษรยาวี</span></span></button>')
+          '<span>Tulisan Jawi</span></button>')
 
 
 # Nota sumber ejaan Jawi (dipaparkan di halaman pertemuan dan dalam PDF)
-JW_NOTE = ('<p class="jw-note">Ejaan Jawi dalam laman ini mengikut sistem ejaan Jawi Dewan Bahasa dan Pustaka (DBP), Malaysia. '
-           '<span lang="th">การสะกดอักษรยาวีในเว็บไซต์นี้ใช้ระบบการสะกดยาวีของ Dewan Bahasa dan Pustaka (DBP) ประเทศมาเลเซีย</span></p>')
+JW_NOTE = ('<p class="jw-note">Ejaan Jawi dalam laman ini mengikut sistem ejaan Jawi Dewan Bahasa dan Pustaka (DBP), Malaysia.</p>')
 
 
 def jw_report():
@@ -250,7 +247,7 @@ def quiz_html(qs, uid):
 
 
 def vocab_rows(units):
-    """Kumpul baris kosa kata (Bahasa Melayu | Bahasa Thai | Contoh Ayat) untuk kad 'Kata hari ini'."""
+    """Kumpul baris kosa kata (Bahasa Melayu | Contoh Ayat) untuk kad 'Kata hari ini' (dengan ejaan Jawi)."""
     out = []
     for n, (meta, sections, _) in units.items():
         for title, content in sections:
@@ -258,16 +255,12 @@ def vocab_rows(units):
                 continue
             for m in re.finditer(r"((?:^\|.*\n?)+)", content, flags=re.M):
                 rows = table_rows(m.group(1).strip().splitlines())
-                if len(rows) < 2 or rows[0][:3] != ["Bahasa Melayu", "Bahasa Thai", "Contoh Ayat"]:
+                if len(rows) < 2 or rows[0][:2] != ["Bahasa Melayu", "Contoh Ayat"]:
                     continue
                 for r in rows[1:]:
-                    if len(r) >= 3 and r[0] and r[2]:
-                        out.append([r[0], r[1], r[2], n])
+                    if len(r) >= 2 and r[0] and r[1]:
+                        out.append([r[0], jawi(r[0]), r[1], n])
     return out
-
-
-def bi(ms, th):
-    return f'<span class="bi"><span>{ms}</span><span class="tr" lang="th">{th}</span></span>'
 
 
 def running(right):
@@ -284,9 +277,9 @@ def folio(f):
 def page(title, body, depth=0, desc="", active="", path=""):
     p = "../" * depth
     SITEMAP.append(SITE + path)
-    nav = [("index.html#kandungan", "Kandungan", "สารบัญ", "kandungan"), ("index.html#jadual", "Jadual", "ตารางเรียน", "jadual"),
-           ("index.html#penilaian", "Penilaian", "การประเมิน", "penilaian")]
-    links = "".join(f'<a href="{p}{h}"{" aria-current=\"page\"" if a == active else ""}><span>{t}</span><small lang="th">{th}</small></a>' for h, t, th, a in nav)
+    nav = [("index.html#kandungan", "Kandungan", "kandungan"), ("index.html#jadual", "Jadual", "jadual"),
+           ("index.html#penilaian", "Penilaian", "penilaian")]
+    links = "".join(f'<a href="{p}{h}"{" aria-current=\"page\"" if a == active else ""}><span>{t}</span>{jw_span(t, "small")}</a>' for h, t, a in nav)
     return f"""<!doctype html>
 <html lang="ms">
 <head>
@@ -303,7 +296,6 @@ def page(title, body, depth=0, desc="", active="", path=""):
 <meta property="og:description" content="{esc(desc)}">
 <meta property="og:url" content="{SITE}{path}">
 <meta property="og:locale" content="ms_MY">
-<meta property="og:locale:alternate" content="th_TH">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS}" media="print" onload="this.media='all'">
@@ -315,7 +307,7 @@ def page(title, body, depth=0, desc="", active="", path=""):
 <body>
 <a class="skip" href="#isi">Langkau ke kandungan</a>
 <header class="site-head">
-  <a class="brand" href="{p}index.html"><span class="mark" aria-hidden="true"></span><span>Kursus BM Online<small>Tahap Permulaan · <span lang="th">ระดับเริ่มต้น</span></small></span></a>
+  <a class="brand" href="{p}index.html"><span class="mark" aria-hidden="true"></span><span>Kursus BM Online<small>Tahap Permulaan</small></span></a>
   <nav aria-label="Navigasi utama">{links}</nav>
 </header>
 <main id="isi">
@@ -323,7 +315,7 @@ def page(title, body, depth=0, desc="", active="", path=""):
 </main>
 <footer class="site-foot">
   <p>Kursus Bahasa Melayu Secara Online (Tahap Permulaan), 1 November 2026 hingga 7 Mac 2027, setiap Ahad 2.00–3.30 petang (Masa Patani).</p>
-  <p>Ejaan Jawi mengikut sistem ejaan Jawi Dewan Bahasa dan Pustaka (DBP), Malaysia · <span lang="th">การสะกดอักษรยาวีใช้ระบบของ Dewan Bahasa dan Pustaka (DBP)</span></p>
+  <p>Ejaan Jawi mengikut sistem ejaan Jawi Dewan Bahasa dan Pustaka (DBP), Malaysia</p>
   <p>Bahan disediakan oleh pasukan pengajar kursus. Laman ini dikendalikan oleh Asst. Prof. Muhammad Salaebing, Universiti Thaksin.</p>
 </footer>
 <script src="{p}assets/app.js" defer></script>
@@ -345,10 +337,10 @@ def build_units():
         toc, parts = [], []
         for title, content in sections:
             sid = SECTION_IDS.get(title, re.sub(r"\W+", "-", title.lower()))
-            toc.append(f'<li><a href="#{sid}">{esc(title)}<span lang="th">{SECTION_TH.get(sid, "")}</span></a></li>')
+            toc.append(f'<li><a href="#{sid}">{esc(title)}</a></li>')
             inner = quiz_html(parse_quiz(content), n) if sid == "kuiz" else render_content(content)
             inner = add_jawi(inner)
-            parts.append(f'<section class="block" id="{sid}"><h2>{esc(title)}{jw_span(title)}<small lang="th">{SECTION_TH.get(sid, "")}</small></h2>{inner}</section>')
+            parts.append(f'<section class="block" id="{sid}"><h2>{esc(title)}{jw_span(title)}</h2>{inner}</section>')
         prev_l = (f'<a class="prev" href="{n-1:02d}.html" rel="prev"><small>← Pertemuan {n-1}</small>{esc(units[n-1][0]["title"])}</a>' if n > 1
                   else '<a class="prev" href="../index.html#kandungan"><small>← Kandungan</small>Kandungan</a>')
         next_l = (f'<a class="next" href="{n+1:02d}.html" rel="next"><small>Pertemuan {n+1} →</small>{esc(units[n+1][0]["title"])}</a>' if n < 20
@@ -357,9 +349,9 @@ def build_units():
         ICON = ('<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" '
                 'stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>')
         dl = (f'<a class="btn" href="../pdf/pertemuan-{n:02d}.pdf" download="Kursus-BM-Online-Pertemuan-{n:02d}-Ringkasan.pdf">{ICON}'
-              f'<span class="bi"><span>Ringkasan pelajaran (PDF)</span><span class="tr" lang="th">ดาวน์โหลดสรุปบทเรียน</span></span></a>')
+              f'<span>Ringkasan pelajaran (PDF)</span></a>')
         prep = meta.get("penyediaan", "—")
-        prep_html = f'<div><dt>Penyediaan bahan <span lang="th">· ผู้เตรียมเอกสาร</span></dt><dd>{esc(prep)}</dd></div>' if prep not in ("", "—") else ""
+        prep_html = f'<div><dt>Penyediaan bahan</dt><dd>{esc(prep)}</dd></div>' if prep not in ("", "—") else ""
         note17 = '<p class="flag">Tarikh dalam reka bentuk kursus sama dengan Pertemuan 16 — sila semak dengan penyelaras.</p>' if n == 17 else ""
         phase = next(name for a_, b_, name in PHASES if a_ <= n <= b_)
         body = f"""
@@ -369,12 +361,11 @@ def build_units():
   <header class="opener">
     <p class="op-k">Pertemuan {n} · <time datetime="{iso}">{date}</time></p>
     <h1>{esc(meta['title'])}{jw_span(meta['title'])}</h1>
-    <p class="th-title" lang="th">{esc(meta.get('th',''))}</p>
     {note17}
     <dl class="unit-meta">
-      <div><dt>Pengajar <span lang="th">· ผู้สอน</span></dt><dd>{esc(teacher)}</dd></div>
-      <div><dt>Fokus kemahiran <span lang="th">· ทักษะที่เน้น</span></dt><dd>{esc(focus)}{jw_span(focus)}</dd></div>
-      <div><dt>Aktiviti & penilaian <span lang="th">· กิจกรรมและการประเมิน</span></dt><dd>{esc(activity)}{jw_span(activity)}</dd></div>
+      <div><dt>Pengajar</dt><dd>{esc(teacher)}</dd></div>
+      <div><dt>Fokus kemahiran</dt><dd>{esc(focus)}{jw_span(focus)}</dd></div>
+      <div><dt>Aktiviti & penilaian</dt><dd>{esc(activity)}{jw_span(activity)}</dd></div>
       {prep_html}
     </dl>
     <div class="actions">{dl}{JW_BTN}</div>
@@ -387,7 +378,7 @@ def build_units():
 </article>
 <nav class="pager" aria-label="Pertemuan sebelum dan seterusnya">{prev_l}{next_l}</nav>"""
         (out_dir / f"{n:02d}.html").write_text(
-            page(f"Pertemuan {n}: {meta['title']} — Kursus BM Online", body, 1, f"Pertemuan {n} ({date}): {meta['title']} · {meta.get('th','')}. Kosa kata Melayu–Thai, dialog, tatabahasa, latihan dan kuiz kendiri.", "", f"pertemuan/{n:02d}.html"), encoding="utf-8")
+            page(f"Pertemuan {n}: {meta['title']} — Kursus BM Online", body, 1, f"Pertemuan {n} ({date}): {meta['title']}. Kosa kata, dialog, tatabahasa, latihan dan kuiz kendiri dalam tulisan Rumi dan Jawi.", "", f"pertemuan/{n:02d}.html"), encoding="utf-8")
     return units
 
 
@@ -397,16 +388,16 @@ def build_index(units):
         items, srows = [], []
         for n in range(a, b + 1):
             iso, date, teacher, focus, activity = SCHEDULE[n]
-            t, th = units[n][0]["title"], units[n][0].get("th", "")
+            t = units[n][0]["title"]
             items.append(f"""<li class="session" data-date="{iso}"><a href="pertemuan/{n:02d}.html">
   <span class="toc-k">Pertemuan {n}<small><time datetime="{iso}">{date}</time></small></span>
-  <span class="toc-t">{esc(t)}<small lang="th">{esc(th)}</small></span><span class="toc-dots"></span><span class="toc-pg">{n}</span></a></li>""")
+  <span class="toc-t">{esc(t)}{jw_span(t, "small")}</span><span class="toc-dots"></span><span class="toc-pg">{n}</span></a></li>""")
             srows.append(f'<tr data-date="{iso}"><td class="n" data-label="#"><a href="pertemuan/{n:02d}.html" aria-label="Pertemuan {n}">{n}</a></td><td data-label="Tarikh"><time datetime="{iso}">{date}</time></td>'
-                         f'<td data-label="Tajuk"><a href="pertemuan/{n:02d}.html">{esc(t)}</a><span class="td-th" lang="th">{esc(th)}</span></td><td data-label="Fokus kemahiran">{esc(focus)}</td><td data-label="Pengajar">{esc(teacher)}</td></tr>')
+                         f'<td data-label="Tajuk"><a href="pertemuan/{n:02d}.html">{esc(t)}</a>{jw_span(t)}</td><td data-label="Fokus kemahiran">{esc(focus)}</td><td data-label="Pengajar">{esc(teacher)}</td></tr>')
         contents.append(f'<li class="toc-part"><span>Bahagian {len(contents)+1} · Pertemuan {a}–{b}</span>{esc(name)}</li>' + "".join(items))
         sched.append(f'<tbody><tr class="ph"><th colspan="5">Bahagian {len(sched)+1} · {esc(name)}</th></tr>{"".join(srows)}</tbody>')
-    front = "".join(f'<li class="toc-front"><a href="{h}"><span class="toc-t">{m}<small lang="th">{t}</small></span><span class="toc-dots"></span><span class="toc-pg">{f}</span></a></li>'
-                    for h, m, t, f in [("#pengenalan", "Pengenalan Kursus", "แนะนำหลักสูตร", "ii"), ("#jadual", "Jadual Kelas", "ตารางเรียน", "iii"), ("#penilaian", "Cara Penilaian", "การประเมินผล", "iv")])
+    front = "".join(f'<li class="toc-front"><a href="{h}"><span class="toc-t">{m}{jw_span(m, "small")}</span><span class="toc-dots"></span><span class="toc-pg">{f}</span></a></li>'
+                    for h, m, f in [("#pengenalan", "Pengenalan Kursus", "ii"), ("#jadual", "Jadual Kelas", "iii"), ("#penilaian", "Cara Penilaian", "iv")])
     vocab = vocab_rows(units)
     import datetime as _dt
     today = _dt.date.today().isoformat()
@@ -416,9 +407,9 @@ def build_index(units):
 <section class="cover-wrap">
   <div class="cover" role="img" aria-label="Kulit buku: Kursus Bahasa Melayu Online, Tahap Permulaan">
     <div class="cv-frame">
-      <p class="cv-top"><span>Kursus Bahasa Melayu Secara Dalam Talian</span><span class="cv-th" lang="th">หลักสูตรภาษามลายูออนไลน์</span></p>
+      <p class="cv-top"><span>Kursus Bahasa Melayu Secara Dalam Talian</span><span class="cv-th cv-jw" lang="ms-Arab" dir="rtl">{esc(jawi("Kursus Bahasa Melayu Secara Dalam Talian"))}</span></p>
       <div class="cv-mid">
-        <p class="cv-year">Tahap Permulaan · <span lang="th">ระดับเริ่มต้น</span></p>
+        <p class="cv-year">Tahap Permulaan · <span class="cv-jw" lang="ms-Arab" dir="rtl">{esc(jawi("Tahap Permulaan"))}</span></p>
         <p class="cv-title">Bahasa Melayu<br>Standard</p>
         <p class="cv-sub">20 Pertemuan · 30 Jam</p>
       </div>
@@ -427,15 +418,15 @@ def build_index(units):
   </div>
   <div class="cover-side">
     <h1 class="side-h">Bahasa Melayu Standard, satu Ahad demi satu Ahad.</h1>
-    <p class="lede">Kursus dalam talian 20 pertemuan untuk peserta di Selatan Thai. Setiap pertemuan membawa satu tema kehidupan seharian, lengkap dengan kosa kata Melayu–Thai, dialog, tatabahasa dan kuiz kendiri.</p>
+    <p class="lede">Kursus dalam talian 20 pertemuan untuk peserta di Selatan Thai. Setiap pertemuan membawa satu tema kehidupan seharian, lengkap dengan kosa kata, dialog, tatabahasa dan kuiz kendiri dalam tulisan Rumi dan Jawi.</p>
     <div class="actions"><a class="btn" href="#kandungan">Buka buku</a><a class="btn-ghost" href="pertemuan/01.html">Mula Pertemuan 1</a></div>
     <section class="next" id="kelas-seterusnya">
-      <p class="next-label">Kelas seterusnya · <span lang="th">คาบเรียนถัดไป</span></p>
+      <p class="next-label">Kelas seterusnya</p>
       <p class="next-body"><a id="next-link" href="pertemuan/{nx:02d}.html">Pertemuan {nx}: {esc(units[nx][0]["title"])} — Ahad, {SCHEDULE[nx][1]}, 2.00 petang bersama {esc(SCHEDULE[nx][2])}</a></p>
     </section>
     <figure class="contrast word" aria-live="polite">
       <p class="word-label">Kata hari ini</p>
-      <div class="pair"><span class="std" id="w-ms">{esc(vocab[0][0])}</span><span class="th" id="w-th" lang="th">{esc(vocab[0][1])}</span></div>
+      <div class="pair"><span class="std" id="w-ms">{esc(vocab[0][0])}</span><span class="th jw-word" id="w-jw" lang="ms-Arab" dir="rtl">{esc(vocab[0][1])}</span></div>
       <figcaption id="w-ex">{esc(vocab[0][2])}</figcaption>
       <div class="word-foot"><button type="button" class="btn-ghost" id="w-next">Kata lain</button><a id="w-link" href="pertemuan/{vocab[0][3]:02d}.html">Dari Pertemuan {vocab[0][3]}</a></div>
     </figure>
@@ -444,7 +435,7 @@ def build_index(units):
 
 <article class="sheet" id="kandungan">
   {running("Kandungan")}
-  <h2 class="sheet-title">Kandungan<small lang="th">สารบัญ</small></h2>
+  <h2 class="sheet-title">Kandungan{jw_span("Kandungan", "small")}</h2>
   {ORN}
   <ol class="toc">{front}{''.join(contents)}</ol>
   {folio("i")}
@@ -452,7 +443,7 @@ def build_index(units):
 
 <article class="sheet" id="pengenalan">
   {running("Pengenalan Kursus")}
-  <h2 class="sheet-title">Pengenalan Kursus<small lang="th">แนะนำหลักสูตร</small></h2>
+  <h2 class="sheet-title">Pengenalan Kursus{jw_span("Pengenalan Kursus", "small")}</h2>
   {ORN}
   <section class="facts" aria-label="Butiran kursus">
     <dl>
@@ -464,7 +455,7 @@ def build_index(units):
   </section>
   <h3>Keunikan modul</h3>
   <div class="two">
-    <div><h4>Dwibahasa Melayu–Thai</h4><p>Setiap kosa kata, frasa dan contoh ayat disertakan terjemahan bahasa Thai, supaya peserta faham makna dengan cepat dan boleh mengulang kaji sendiri di rumah.</p></div>
+    <div><h4>Rumi dan Jawi</h4><p>Setiap kosa kata, frasa dan contoh ayat dipaparkan dalam tulisan Rumi bersama tulisan Jawi, supaya peserta dapat membaca kedua-dua tulisan dan mengulang kaji sendiri di rumah.</p></div>
     <div><h4>Fokus dalam talian</h4><p>Alat digital yang interaktif — Kahoot, Quizizz, Wordwall, Breakout Rooms — supaya peserta di Selatan Thai seronok belajar dan tidak terbeban.</p></div>
   </div>
   {folio("ii")}
@@ -472,7 +463,7 @@ def build_index(units):
 
 <article class="sheet" id="jadual">
   {running("Jadual Kelas")}
-  <h2 class="sheet-title">Jadual Kelas<small lang="th">ตารางเรียน</small></h2>
+  <h2 class="sheet-title">Jadual Kelas{jw_span("Jadual Kelas", "small")}</h2>
   {ORN}
   <p class="sub">Klik pada tajuk pertemuan untuk membuka kosa kata, dialog, tatabahasa, latihan dan kuiz kendiri.</p>
   <div class="table-wrap cards" role="region" aria-label="Jadual kelas" tabindex="0"><table class="sched"><thead><tr><th>#</th><th>Tarikh</th><th>Tajuk</th><th>Fokus kemahiran</th><th>Pengajar</th></tr></thead>{''.join(sched)}</table></div>
@@ -481,7 +472,7 @@ def build_index(units):
 
 <article class="sheet assess" id="penilaian">
   {running("Cara Penilaian")}
-  <h2 class="sheet-title">Cara Penilaian<small lang="th">การประเมินผล</small></h2>
+  <h2 class="sheet-title">Cara Penilaian{jw_span("Cara Penilaian", "small")}</h2>
   {ORN}
   <div class="two">
     <div>
@@ -505,7 +496,7 @@ def build_index(units):
 <script>window.SCHEDULE = {sched_json}; window.VOCAB = {json.dumps(vocab, ensure_ascii=False)};</script>
 """
     (ROOT / "index.html").write_text(page("Kursus Bahasa Melayu Online — Tahap Permulaan", body, 0,
-        "Kursus Bahasa Melayu secara dalam talian (tahap permulaan) untuk penutur Melayu Selatan Thai. หลักสูตรภาษามลายูออนไลน์ระดับเริ่มต้น 20 ครั้ง", "utama", ""), encoding="utf-8")
+        "Kursus Bahasa Melayu secara dalam talian (tahap permulaan), 20 pertemuan, dalam tulisan Rumi dan Jawi, untuk penutur Melayu Selatan Thai.", "utama", ""), encoding="utf-8")
 
 
 if __name__ == "__main__":

@@ -18,10 +18,13 @@ Setiap teks Melayu dalam halaman pertemuan dipaparkan bersama baris Jawi (butang
 Ejaan diambil daripada `_src/jawi.tsv` (lajur `rumi`, `jawi`, `sumber`: `buku` = disemak dalam buku อต.1–6, `kamus` = senarai Rumi–Jawi, `semak` = dieja oleh pembina dan perlu disemak).
 Untuk membetulkan ejaan, ubah lajur `jawi` dalam fail itu dan jalankan semula `python3 _src/build.py` (kata yang tiada dalam fail akan disenaraikan semasa membina).
 
+## Bahasa paparan
+Laman ini hanya menggunakan Bahasa Melayu dalam tulisan Rumi dan Jawi — tiada teks atau menu bahasa Thai. Menu, Kandungan dan tajuk halaman dipaparkan dalam Rumi dengan baris Jawi di bawahnya.
+
 ## Reka bentuk & kualiti
 - Bentuk buku: kulit, Kandungan, helaian bernombor dan sudut kertas untuk tukar pertemuan.
 - Di telefon: maklumat "Kelas seterusnya" dipaparkan dahulu; jadual kosa kata menjadi kad (tiada tatal ke sisi).
-- Saiz huruf minimum 13 px (huruf Thai lebih besar), sasaran sentuh sekurang-kurangnya 44 px, kontras warna memenuhi WCAG AA (mod cerah dan gelap).
+- Saiz huruf minimum 13 px (baris Jawi lebih besar), sasaran sentuh sekurang-kurangnya 44 px, kontras warna memenuhi WCAG AA (mod cerah dan gelap).
 - `sitemap.xml` dan `robots.txt` dibina semula setiap kali `python3 _src/build.py` dijalankan.
 
 ## Nota PDF setiap pertemuan
