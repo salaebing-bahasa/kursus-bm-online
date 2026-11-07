@@ -32,20 +32,20 @@ SCHEDULE = {
     4: ("2026-11-22", "22 November 2026", "Dr. Abdullah Kreedaoh", "Membaca: Kata Nama Am & Kata Nama Khas", "Membina carta organisasi keluarga sendiri"),
     5: ("2026-11-29", "29 November 2026", "Dr. Samsina Yapha", "Mendengar: Kata Bilangan & Penjodoh Bilangan", "Kuiz spontan harga barang di pasar"),
     6: ("2026-12-06", "6 Disember 2026", "Dr. Uniansasmita Samoh", "Menulis: Kata Sifat (besar, bersih, jauh)", "Padanan gambar dengan perkataan yang betul"),
-    7: ("2026-12-13", "13 Disember 2026", "Encik Lee", "Bertutur: Kata Kerja Transitif", "Vlog pendek \"Satu Jam dalam Hidup Saya\""),
+    7: ("2026-12-13", "13 Disember 2026", "Ustaz Muhammad Alee Song", "Bertutur: Kata Kerja Transitif", "Vlog pendek \"Satu Jam dalam Hidup Saya\""),
     8: ("2026-12-20", "20 Disember 2026", "Ustazah Khadijah Muna", "Membaca: Kata Kerja Tak Transitif", "Temu bual rakan sekelas tentang hobi"),
     9: ("2026-12-27", "27 Disember 2026", "Asst. Prof. Dr. Aleeyah Masae", "Mendengar: Kata Sendi Nama (di, ke, dari)", "Lukis peta berdasarkan arahan lisan guru"),
-    10: ("2027-01-03", "3 Januari 2027", "Cik Rahanee Tehsa", "Bertutur: Ayat Perintah & Permintaan", "Simulasi memesan makanan secara dalam talian"),
+    10: ("2027-01-03", "3 Januari 2027", "Ustazah Rahanee Tehsa", "Bertutur: Ayat Perintah & Permintaan", "Simulasi memesan makanan secara dalam talian"),
     11: ("2027-01-10", "10 Januari 2027", "Cik Firdaos Muhamat", "Menulis: Kata Hubung (dan, atau, tetapi)", "Menulis mesej ringkas kepada doktor"),
     12: ("2027-01-17", "17 Januari 2027", "Puan Wankamilia Hayeehasa", "Bertutur: Ayat Tanya (Berapa, Mana)", "Main peranan penjual dan pembeli"),
     13: ("2027-01-24", "24 Januari 2027", "Dr. Suhaila Binsama-ae", "Membaca: Kata Adjektif Warna & Ukuran", "Persembahan slaid \"Fesyen Kegemaran Saya\""),
-    14: ("2027-01-31", "31 Januari 2027", "Ustaz Abd. Ghani", "Mendengar: Penanda Wacana (Selain itu, Kemudian)", "Laporan cuaca kreatif ala berita TV"),
-    15: ("2027-02-07", "7 Februari 2027", "Ustaz Nurdin", "Menulis: Imbuhan Awalan (meN-, ber-)", "Menulis kad ucapan digital untuk kawan"),
+    14: ("2027-01-31", "31 Januari 2027", "Ustaz Abdul Ghani Chehae", "Mendengar: Penanda Wacana (Selain itu, Kemudian)", "Laporan cuaca kreatif ala berita TV"),
+    15: ("2027-02-07", "7 Februari 2027", "Ustaz Nurading Meeha", "Menulis: Imbuhan Awalan (meN-, ber-)", "Menulis kad ucapan digital untuk kawan"),
     16: ("2027-02-14", "14 Februari 2027", "Asst. Prof. Muhammad Salaebing", "Membaca: Kata Pinjaman & Istilah ICT", "Mencari maklumat di laman berita Melayu"),
-    17: ("2027-02-14", "14 Februari 2027", "Asst. Prof. Samiyah Baleh", "Bertutur: Ayat Penyata & Ayat Seruan", "Pembentangan \"Cita-cita Saya\""),
-    18: ("2027-02-21", "21 Februari 2027", "Asst. Prof. Hasbulloh Nadaraning", "Mendengar: Kata Tanya (Bagaimana, Mengapa)", "Membina itinerari pelancongan ringkas"),
-    19: ("2027-02-28", "28 Februari 2027", "Asst. Prof. Dr. Pareeda Hayeeteh", "Menulis: Membina Perenggan Mudah", "Menulis ulasan pendek tentang filem Melayu"),
-    20: ("2027-03-07", "7 Mac 2027", "Asst. Prof. Dr. Pareeda Hayeeteh, Puan Kartini Wado, Asst. Prof. Muhammad Salaebing & Dr. Uniansasmita Samoh", "Semua kemahiran: Pengukuhan tatabahasa", "Penilaian akhir: Pembentangan projek individu"),
+    17: ("2027-02-21", "21 Februari 2027", "Asst. Prof. Samiyah Baleh", "Bertutur: Ayat Penyata & Ayat Seruan", "Pembentangan \"Cita-cita Saya\""),
+    18: ("2027-02-28", "28 Februari 2027", "Asst. Prof. Hasbulloh Nadaraning", "Mendengar: Kata Tanya (Bagaimana, Mengapa)", "Membina itinerari pelancongan ringkas"),
+    19: ("2027-03-07", "7 Mac 2027", "Asst. Prof. Dr. Pareeda Hayeeteh", "Menulis: Membina Perenggan Mudah", "Menulis ulasan pendek tentang filem Melayu"),
+    20: ("2027-03-14", "14 Mac 2027", "Asst. Prof. Dr. Pareeda Hayeeteh, Puan Kartini Wado, Asst. Prof. Muhammad Salaebing, Dr. Uniansasmita Samoh & Ustazah Sareeyah Star", "Semua kemahiran: Pengukuhan tatabahasa", "Penilaian akhir: Pembentangan projek individu"),
 }
 
 SECTION_IDS = {"Objektif Pembelajaran": "objektif", "Kosa Kata": "kosa-kata", "Perbualan": "perbualan",
@@ -314,7 +314,7 @@ def page(title, body, depth=0, desc="", active="", path=""):
 {body}
 </main>
 <footer class="site-foot">
-  <p>Kursus Bahasa Melayu Secara Online (Tahap Permulaan), 1 November 2026 hingga 7 Mac 2027, setiap Ahad 2.00–3.30 petang (Masa Patani).</p>
+  <p>Kursus Bahasa Melayu Secara Online (Tahap Permulaan), 1 November 2026 hingga 14 Mac 2027, setiap Ahad 2.00–3.30 petang (Masa Patani).</p>
   <p>Ejaan Jawi mengikut sistem ejaan Jawi Dewan Bahasa dan Pustaka (DBP), Malaysia</p>
   <p>Bahan disediakan oleh pasukan pengajar kursus. Laman ini dikendalikan oleh Asst. Prof. Muhammad Salaebing, Universiti Thaksin.</p>
 </footer>
@@ -413,7 +413,7 @@ def build_index(units):
         <p class="cv-title">Bahasa Melayu<br>Standard</p>
         <p class="cv-sub">20 Pertemuan · 30 Jam</p>
       </div>
-      <p class="cv-author"><span>1 November 2026 – 7 Mac 2027</span><span class="cv-th">Setiap Ahad, 2.00–3.30 petang (Masa Patani)</span></p>
+      <p class="cv-author"><span>1 November 2026 – 14 Mac 2027</span><span class="cv-th">Setiap Ahad, 2.00–3.30 petang (Masa Patani)</span></p>
     </div>
   </div>
   <div class="cover-side">
@@ -448,7 +448,7 @@ def build_index(units):
   <section class="facts" aria-label="Butiran kursus">
     <dl>
       <div><dt>Tempoh</dt><dd>30 jam (20 pertemuan, 1 jam 30 minit setiap satu)</dd></div>
-      <div><dt>Tarikh</dt><dd>1 November 2026 – 7 Mac 2027</dd></div>
+      <div><dt>Tarikh</dt><dd>1 November 2026 – 14 Mac 2027</dd></div>
       <div><dt>Waktu</dt><dd>Setiap Ahad, 2.00–3.30 petang (Masa Patani)</dd></div>
       <div><dt>Platform</dt><dd>Zoom / Google Meet / Microsoft Teams</dd></div>
     </dl>

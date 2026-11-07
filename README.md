@@ -1,6 +1,6 @@
 # Kursus Bahasa Melayu Online (Tahap Permulaan)
 
-Laman web kursus 20 pertemuan (1 November 2026 – 7 Mac 2027, setiap Ahad 2.00–3.30 petang, Masa Patani).
+Laman web kursus 20 pertemuan (1 November 2026 – 14 Mac 2027, setiap Ahad 2.00–3.30 petang, Masa Patani).
 
 ## Struktur
 - `index.html` — laman utama: jadual, kelas seterusnya, penilaian
