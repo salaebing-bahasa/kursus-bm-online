@@ -34,9 +34,10 @@ Laman ini hanya menggunakan Bahasa Melayu dalam tulisan Rumi dan Jawi — tiada 
 - Selepas mengubah `_src/units/*.md`, bina semula HTML **dan** PDF:
   `python3 _src/build.py && python3 _src/pdf.py` (perlu `pip install playwright` dan `playwright install chromium`).
 
-## Log masuk peserta
-- Halaman `pertemuan/01.html` … `20.html` memerlukan log masuk dengan akaun Google; laman utama (`index.html`) kekal terbuka.
-- Hanya nama dan e-mel peserta disimpan (Firestore, koleksi `bmonline`, projek Firebase `tatabahasa-melayu` yang dikongsi dengan laman 0113131).
+## Log masuk peserta dan kemajuan
+- Halaman `pertemuan/01.html` … `20.html`, `kemajuan.html`, `kata.html`, `sijil.html` dan `senarai.html` memerlukan log masuk Google; laman utama kekal terbuka.
+- Data (Firestore, koleksi `bmonline`, projek Firebase `tatabahasa-melayu` yang dikongsi dengan laman 0113131): nama, e-mel, pertemuan yang dibuka, markah kuiz, setiap jawapan kuiz, buku kata, nama dan tarikh sijil.
+- `kemajuan.html` — Kemajuan Saya; `kata.html` — Buku Kata Saya (butang ☆ pada jadual kosa kata) dengan kad ulang kaji; `sijil.html` — sijil apabila kuiz semua 20 pertemuan lulus (≥ 60%).
+- `senarai.html` — halaman pengajar (tidak dipautkan dari menu): kemajuan setiap peserta, soalan paling banyak salah, muat turun CSV.
 - Peraturan keselamatan Firestore ada dalam fail `firestore.rules` repo `tatabahasa-melayu`.
-- Senarai peserta untuk pengajar: `senarai.html` (tidak dipautkan dari menu; hanya e-mel pengajar dalam `assets/akaun.js` boleh melihat).
-- Teks halaman log masuk (Rumi + Jawi) ada dalam `AKAUN_TEKS_RUMI` di `_src/build.py`; skrip log masuk: `assets/akaun.js`.
+- Teks antara muka (Rumi + Jawi) ada dalam `AKAUN_TEKS_RUMI` di `_src/build.py`; skrip: `assets/akaun.js`.
