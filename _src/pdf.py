@@ -40,6 +40,7 @@ def main():
     with sync_playwright() as p:
         b = p.chromium.launch()
         page = b.new_page()
+        page.add_init_script("window.__BINA_PDF = 1")  # langkau log masuk semasa membina PDF · ข้ามหน้าล็อกอินตอนสร้าง PDF
         page.route("**/gc.zgo.at/**", lambda r: r.abort())
         if FONT_DIR:
             local_fonts(page)
