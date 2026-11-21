@@ -371,3 +371,26 @@ h1 .jw, h2 .jw, h3 .jw { font-weight: 600; color: inherit; font-size: .78em; lin
 .no-jw .site-head nav a small.jw, .no-jw .toc-t small.jw, .no-jw .sheet-title small.jw, .no-jw .sched td .jw { display: none; }
 .toc-t small.jw { text-align: left; }
 .sheet-title small.jw { text-align: center; font-size: max(.5em, 1rem); }
+
+/* Log masuk peserta · หน้าล็อกอิน (assets/akaun.js) */
+html.kunci #isi { display: none; }
+.pintu { display: none; }
+html.kunci .pintu { display: grid; place-items: center; min-height: 62vh; padding: 28px 16px; }
+.pintu-kad { max-width: 560px; width: 100%; text-align: center; background: var(--sheet); border: 1px solid var(--line); border-top: 4px solid var(--gold-line); border-radius: var(--radius); padding: 30px 24px; box-shadow: 0 10px 30px rgba(59,16,39,.08); }
+.pintu-kad h1 { font: 700 1.5rem/1.3 var(--f-head); color: var(--plum-deep); margin: 0 0 12px; }
+.pintu-kad p { line-height: 1.7; }
+.pintu-kad .jw { text-align: center; }
+.pintu-btn { gap: 10px; margin: 12px auto 6px; flex-direction: row; }
+.pintu-btn span { display: flex; flex-direction: column; align-items: flex-start; }
+.pintu-btn .jw { color: inherit; margin: 0; font-size: .95em; line-height: 1.6; }
+.pintu-btn svg { background: #fff; border-radius: 50%; padding: 2px; width: 26px; height: 26px; flex: none; }
+.pintu-nota { font-size: .9rem; color: var(--ink-soft); margin-top: 16px; }
+.pintu-nota-merah { color: var(--no); font-weight: 600; }
+.pintu-muat { color: var(--ink-soft); }
+.pintu-butang { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+.pintu-butang .btn, .pintu-butang .btn-ghost { flex-direction: column; }
+.pintu-butang .jw { color: inherit; margin: 0; text-align: center; }
+.akaun-cip { display: flex; align-items: center; gap: 8px; font-size: .9rem; color: var(--ink-soft); }
+.akaun-nama { max-width: 16ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.akaun-keluar { min-height: 40px; border: 1.5px solid var(--line); background: transparent; color: var(--plum); border-radius: 999px; padding: 4px 12px; cursor: pointer; font: 600 .85rem var(--f-body); display: flex; flex-direction: column; align-items: center; line-height: 1.3; }
+.akaun-keluar .jw { margin: 0; font-size: .9em; line-height: 1.5; color: inherit; text-align: center; }

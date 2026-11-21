@@ -274,9 +274,49 @@ def folio(f):
     return f'<p class="folio" aria-hidden="true"><span>{f}</span></p>'
 
 
-def page(title, body, depth=0, desc="", active="", path=""):
+# Teks antara muka log masuk (Rumi + Jawi daripada jawi.tsv) · ข้อความหน้าล็อกอิน
+AKAUN_TEKS_RUMI = {
+    "tajuk": "Log masuk untuk membaca pelajaran",
+    "isi": "Halaman pertemuan ini untuk peserta kursus. Sila log masuk dengan akaun Google anda.",
+    "butang": "Log masuk dengan Google",
+    "data": "Nama dan alamat e-mel anda akan disimpan supaya pengajar mengetahui siapa peserta kursus. Maklumat ini tidak dikongsi dengan pihak lain.",
+    "setuju_tajuk": "Makluman penggunaan maklumat",
+    "padam": "Anda boleh meminta maklumat anda dipadam dengan menghubungi pengajar.",
+    "ya": "Setuju",
+    "tidak": "Tidak setuju",
+    "ditolak": "Anda perlu bersetuju untuk membaca halaman pertemuan.",
+    "keluar": "Log keluar",
+    "memuat": "Sedang memeriksa akaun",
+    "gagal": "Sistem log masuk tidak dapat dimuatkan. Sila semak sambungan internet dan cuba lagi.",
+    "muat_semula": "Muat semula",
+    "senarai": "Senarai peserta",
+    "senarai_guru": "Halaman ini untuk pengajar sahaja.",
+    "muat_turun": "Muat turun",
+    "nama": "Nama",
+    "emel": "E-mel",
+    "pertama": "Kali pertama log masuk",
+    "terakhir": "Kali terakhir log masuk",
+    "peserta": "peserta",
+}
+
+
+KUNCI_HEAD = '\n<script>if(!window.__BINA_PDF)document.documentElement.classList.add("kunci")</script>'
+KUNCI_PINTU = '<section id="pintu" class="pintu" aria-live="polite"></section>\n<noscript><p class="pintu">Sila hidupkan JavaScript untuk log masuk.</p></noscript>\n'
+KUNCI_SKRIP = ('<script>window.AKAUN_TEKS = %s;\n'
+               # jika sistem log masuk gagal dimuatkan dalam 12 saat · ถ้าโหลดระบบล็อกอินไม่ได้ใน 12 วินาที
+               'setTimeout(function(){var p=document.getElementById("pintu"),T=window.AKAUN_TEKS;if(document.documentElement.classList.contains("kunci")&&p&&!document.getElementById("pintu-masuk")&&!document.getElementById("st-ya")&&!window.AKAUN_SEDIA){p.innerHTML=\'<div class="pintu-kad"><p>\'+T.gagal[0]+\'</p><p class="jw" lang="ms-Arab" dir="rtl">\'+T.gagal[1]+\'</p><button type="button" class="btn" onclick="location.reload()">\'+T.muat_semula[0]+\'</button></div>\'}},12000);</script>\n'
+               '<script type="module" src="%sassets/akaun.js"></script>\n')
+
+
+def akaun_teks():
+    return json.dumps({k: [v, jawi(v)] for k, v in AKAUN_TEKS_RUMI.items()}, ensure_ascii=False)
+
+
+def page(title, body, depth=0, desc="", active="", path="", kunci=False):
+    """kunci=True: halaman perlu log masuk (assets/akaun.js) · หน้านี้ต้องล็อกอิน"""
     p = "../" * depth
-    SITEMAP.append(SITE + path)
+    if path != "senarai.html":
+        SITEMAP.append(SITE + path)
     nav = [("index.html#kandungan", "Kandungan", "kandungan"), ("index.html#jadual", "Jadual", "jadual"),
            ("index.html#penilaian", "Penilaian", "penilaian")]
     links = "".join(f'<a href="{p}{h}"{" aria-current=\"page\"" if a == active else ""}><span>{t}</span>{jw_span(t, "small")}</a>' for h, t, a in nav)
@@ -302,7 +342,7 @@ def page(title, body, depth=0, desc="", active="", path=""):
 <noscript><link rel="stylesheet" href="{FONTS}"></noscript>
 <link rel="stylesheet" href="{p}assets/style.css">
 <link rel="icon" href="{p}assets/favicon.svg" type="image/svg+xml">
-<script>try{{if(localStorage.getItem("jawi")==="0")document.documentElement.classList.add("no-jw")}}catch(e){{}}</script>
+<script>try{{if(localStorage.getItem("jawi")==="0")document.documentElement.classList.add("no-jw")}}catch(e){{}}</script>{KUNCI_HEAD if kunci else ""}
 </head>
 <body>
 <a class="skip" href="#isi">Langkau ke kandungan</a>
@@ -310,7 +350,7 @@ def page(title, body, depth=0, desc="", active="", path=""):
   <a class="brand" href="{p}index.html"><span class="mark" aria-hidden="true"></span><span>Kursus BM Online<small>Tahap Permulaan</small></span></a>
   <nav aria-label="Navigasi utama">{links}</nav>
 </header>
-<main id="isi">
+{KUNCI_PINTU if kunci else ""}<main id="isi">
 {body}
 </main>
 <footer class="site-foot">
@@ -319,7 +359,7 @@ def page(title, body, depth=0, desc="", active="", path=""):
   <p>Bahan disediakan oleh pasukan pengajar kursus. Laman ini dikendalikan oleh Asst. Prof. Muhammad Salaebing, Universiti Thaksin.</p>
 </footer>
 <script src="{p}assets/app.js" defer></script>
-<script data-goatcounter="https://{GOATCOUNTER}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+{(KUNCI_SKRIP % (akaun_teks(), p)) if kunci else ""}<script data-goatcounter="https://{GOATCOUNTER}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
 """
@@ -378,7 +418,7 @@ def build_units():
 </article>
 <nav class="pager" aria-label="Pertemuan sebelum dan seterusnya">{prev_l}{next_l}</nav>"""
         (out_dir / f"{n:02d}.html").write_text(
-            page(f"Pertemuan {n}: {meta['title']} — Kursus BM Online", body, 1, f"Pertemuan {n} ({date}): {meta['title']}. Kosa kata, dialog, tatabahasa, latihan dan kuiz kendiri dalam tulisan Rumi dan Jawi.", "", f"pertemuan/{n:02d}.html"), encoding="utf-8")
+            page(f"Pertemuan {n}: {meta['title']} — Kursus BM Online", body, 1, f"Pertemuan {n} ({date}): {meta['title']}. Kosa kata, dialog, tatabahasa, latihan dan kuiz kendiri dalam tulisan Rumi dan Jawi.", "", f"pertemuan/{n:02d}.html", kunci=True), encoding="utf-8")
     return units
 
 
@@ -499,9 +539,19 @@ def build_index(units):
         "Kursus Bahasa Melayu secara dalam talian (tahap permulaan), 20 pertemuan, dalam tulisan Rumi dan Jawi, untuk penutur Melayu Selatan Thai.", "utama", ""), encoding="utf-8")
 
 
+def build_senarai():
+    """Halaman senarai peserta untuk pengajar (tidak dipautkan) · หน้ารายชื่อผู้เรียนสำหรับอาจารย์"""
+    body = f"""<article class="sheet">
+  <h1 class="sheet-title">Senarai peserta{jw_span("Senarai peserta", "small")}</h1>
+  <div id="senarai-peserta"></div>
+</article>"""
+    (ROOT / "senarai.html").write_text(page("Senarai peserta — Kursus BM Online", body, 0, "Senarai peserta kursus (pengajar sahaja).", "", "senarai.html", kunci=True), encoding="utf-8")
+
+
 if __name__ == "__main__":
     u = build_units()
     build_index(u)
+    build_senarai()
     (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"  <url><loc>{u_}</loc></url>\n" for u_ in sorted(SITEMAP)) + "</urlset>\n", encoding="utf-8")
     (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE}sitemap.xml\n", encoding="utf-8")
