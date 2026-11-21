@@ -300,12 +300,20 @@ AKAUN_TEKS_RUMI = {
 }
 
 
-KUNCI_HEAD = '\n<script>if(!window.__BINA_PDF)document.documentElement.classList.add("kunci")</script>'
+KUNCI_HEAD = ('\n<script>if(!window.__BINA_PDF)document.documentElement.classList.add("kunci")</script>'
+              # sembunyikan kandungan walaupun style.css lama masih dalam cache · ซ่อนเนื้อหาแม้เบราว์เซอร์ยังจำ CSS เก่า
+              '\n<style>html.kunci #isi{display:none}.pintu{display:none}html.kunci .pintu{display:grid;place-items:center;min-height:62vh;padding:28px 16px}</style>')
 KUNCI_PINTU = '<section id="pintu" class="pintu" aria-live="polite"></section>\n<noscript><p class="pintu">Sila hidupkan JavaScript untuk log masuk.</p></noscript>\n'
 KUNCI_SKRIP = ('<script>window.AKAUN_TEKS = %s;\n'
                # jika sistem log masuk gagal dimuatkan dalam 12 saat · ถ้าโหลดระบบล็อกอินไม่ได้ใน 12 วินาที
                'setTimeout(function(){var p=document.getElementById("pintu"),T=window.AKAUN_TEKS;if(document.documentElement.classList.contains("kunci")&&p&&!document.getElementById("pintu-masuk")&&!document.getElementById("st-ya")&&!window.AKAUN_SEDIA){p.innerHTML=\'<div class="pintu-kad"><p>\'+T.gagal[0]+\'</p><p class="jw" lang="ms-Arab" dir="rtl">\'+T.gagal[1]+\'</p><button type="button" class="btn" onclick="location.reload()">\'+T.muat_semula[0]+\'</button></div>\'}},12000);</script>\n'
-               '<script type="module" src="%sassets/akaun.js"></script>\n')
+               '<script type="module" src="%sassets/akaun.js?v=%s"></script>\n')
+
+
+def VERSI(nama):
+    """Kod versi fail aset (hash kandungan) supaya pelayar memuat versi terbaru · กันเบราว์เซอร์ใช้ไฟล์เก่า"""
+    import hashlib
+    return hashlib.md5((ROOT / "assets" / nama).read_bytes()).hexdigest()[:8]
 
 
 def akaun_teks():
@@ -340,7 +348,7 @@ def page(title, body, depth=0, desc="", active="", path="", kunci=False):
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{FONTS}"></noscript>
-<link rel="stylesheet" href="{p}assets/style.css">
+<link rel="stylesheet" href="{p}assets/style.css?v={VERSI("style.css")}">
 <link rel="icon" href="{p}assets/favicon.svg" type="image/svg+xml">
 <script>try{{if(localStorage.getItem("jawi")==="0")document.documentElement.classList.add("no-jw")}}catch(e){{}}</script>{KUNCI_HEAD if kunci else ""}
 </head>
@@ -358,8 +366,8 @@ def page(title, body, depth=0, desc="", active="", path="", kunci=False):
   <p>Ejaan Jawi mengikut sistem ejaan Jawi Dewan Bahasa dan Pustaka (DBP), Malaysia</p>
   <p>Bahan disediakan oleh pasukan pengajar kursus. Laman ini dikendalikan oleh Asst. Prof. Muhammad Salaebing, Universiti Thaksin.</p>
 </footer>
-<script src="{p}assets/app.js" defer></script>
-{(KUNCI_SKRIP % (akaun_teks(), p)) if kunci else ""}<script data-goatcounter="https://{GOATCOUNTER}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+<script src="{p}assets/app.js?v={VERSI("app.js")}" defer></script>
+{(KUNCI_SKRIP % (akaun_teks(), p, VERSI("akaun.js"))) if kunci else ""}<script data-goatcounter="https://{GOATCOUNTER}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
 """
