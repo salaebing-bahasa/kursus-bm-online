@@ -61,7 +61,10 @@
       score.textContent = done < qs.length
         ? "Sudah dijawab: " + done + " / " + qs.length
         : "Markah anda: " + right + " / " + qs.length + (right === qs.length ? " — Syabas!" : right >= qs.length * 0.6 ? " — Bagus!" : " — Cuba lagi selepas ulang kaji.");
+      /* Akaun peserta: hantar markah apabila semua soalan dijawab (assets/akaun.js) · ส่งคะแนนเมื่อตอบครบ */
+      if (done === qs.length) try { window.dispatchEvent(new CustomEvent("bm:kuiz", { detail: { ok: right, all: qs.length } })); } catch (e) {}
     }
+    var teks = function (el) { if (!el) return ""; var c = el.cloneNode(true); c.querySelectorAll(".qn, .jw").forEach(function (x) { x.remove(); }); return c.textContent.replace(/\s+/g, " ").trim(); };
     qs.forEach(function (q) {
       var ans = +q.dataset.ans, opts = q.querySelectorAll(".opt"), fb = q.querySelector(".fb");
       opts.forEach(function (o) {
@@ -71,6 +74,7 @@
           var pick = +o.dataset.i;
           opts.forEach(function (x) { x.disabled = true; });
           opts[ans].classList.add("right");
+          try { window.dispatchEvent(new CustomEvent("bm:jawab", { detail: { item: Array.prototype.indexOf.call(qs, q) + 1, soalan: teks(q.querySelector("legend")).slice(0, 300), jawapan: teks(o).slice(0, 300), betul: pick === ans } })); } catch (e) {}
           if (pick === ans) { q.classList.add("correct"); fb.textContent = "Betul!"; fb.className = "fb ok"; }
           else { o.classList.add("wrong"); fb.textContent = "Kurang tepat. Jawapan yang betul: " + (opts[ans].querySelector(".rm") || opts[ans]).textContent; fb.className = "fb no"; }
           update();

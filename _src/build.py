@@ -279,7 +279,7 @@ AKAUN_TEKS_RUMI = {
     "tajuk": "Log masuk untuk membaca pelajaran",
     "isi": "Halaman pertemuan ini untuk peserta kursus. Sila log masuk dengan akaun Google anda.",
     "butang": "Log masuk dengan Google",
-    "data": "Nama dan alamat e-mel anda akan disimpan supaya pengajar mengetahui siapa peserta kursus. Maklumat ini tidak dikongsi dengan pihak lain.",
+    "data": "Nama, alamat e-mel, kemajuan, markah kuiz, jawapan kuiz dan kata yang anda simpan akan disimpan supaya pengajar dapat membantu pembelajaran anda. Maklumat ini tidak dikongsi dengan pihak lain.",
     "setuju_tajuk": "Makluman penggunaan maklumat",
     "padam": "Anda boleh meminta maklumat anda dipadam dengan menghubungi pengajar.",
     "ya": "Setuju",
@@ -297,6 +297,40 @@ AKAUN_TEKS_RUMI = {
     "pertama": "Kali pertama log masuk",
     "terakhir": "Kali terakhir log masuk",
     "peserta": "peserta",
+    "kemajuan": "Kemajuan Saya",
+    "buku_kata": "Buku Kata Saya",
+    "akaun": "Akaun saya",
+    "dibuka": "Sudah dibuka",
+    "belum": "Belum dibuka",
+    "kuiz": "Kuiz",
+    "markah": "Markah terbaik",
+    "cubaan": "Cubaan",
+    "lulus": "Lulus",
+    "ulang": "Perlu ulang kaji",
+    "pertemuan_dibuka": "Pertemuan dibuka",
+    "kuiz_lulus": "Kuiz lulus",
+    "purata": "Purata markah",
+    "sijil": "Sijil penyertaan",
+    "sijil_syarat": "Sijil boleh dicetak apabila kuiz semua 20 pertemuan dijawab dengan markah sekurang-kurangnya 60 peratus.",
+    "sijil_lihat": "Lihat sijil",
+    "cetak": "Cetak sijil",
+    "nama_sijil": "Nama penuh untuk sijil",
+    "simpan": "Simpan",
+    "simpan_kata": "Simpan kata",
+    "disimpan": "Sudah disimpan",
+    "kata_kosong": "Belum ada kata. Tekan bintang di sebelah kosa kata dalam halaman pertemuan.",
+    "ulang_kaji": "Ulang kaji dengan kad",
+    "ingat": "Sudah ingat",
+    "belum_ingat": "Belum ingat",
+    "tekan_kad": "Tekan kad untuk melihat contoh ayat",
+    "padam_kata": "Padam",
+    "selesai": "Selesai",
+    "kembali": "Kembali",
+    "soalan_sukar": "Soalan paling banyak salah",
+    "jawapan_salah": "Jawapan salah yang lazim",
+    "muat_turun_jawapan": "Muat turun semua jawapan",
+    "aktif": "Aktif dalam tujuh hari",
+    "orang": "orang",
 }
 
 
@@ -304,10 +338,13 @@ KUNCI_HEAD = ('\n<script>if(!window.__BINA_PDF)document.documentElement.classLis
               # sembunyikan kandungan walaupun style.css lama masih dalam cache · ซ่อนเนื้อหาแม้เบราว์เซอร์ยังจำ CSS เก่า
               '\n<style>html.kunci #isi{display:none}.pintu{display:none}html.kunci .pintu{display:grid;place-items:center;min-height:62vh;padding:28px 16px}</style>')
 KUNCI_PINTU = '<section id="pintu" class="pintu" aria-live="polite"></section>\n<noscript><p class="pintu">Sila hidupkan JavaScript untuk log masuk.</p></noscript>\n'
-KUNCI_SKRIP = ('<script>window.AKAUN_TEKS = %s;\n'
+KUNCI_SKRIP = ('<script>window.AKAUN_TEKS = %s; window.BM_TAJUK = %s;\n'
                # jika sistem log masuk gagal dimuatkan dalam 12 saat · ถ้าโหลดระบบล็อกอินไม่ได้ใน 12 วินาที
                'setTimeout(function(){var p=document.getElementById("pintu"),T=window.AKAUN_TEKS;if(document.documentElement.classList.contains("kunci")&&p&&!document.getElementById("pintu-masuk")&&!document.getElementById("st-ya")&&!window.AKAUN_SEDIA){p.innerHTML=\'<div class="pintu-kad"><p>\'+T.gagal[0]+\'</p><p class="jw" lang="ms-Arab" dir="rtl">\'+T.gagal[1]+\'</p><button type="button" class="btn" onclick="location.reload()">\'+T.muat_semula[0]+\'</button></div>\'}},12000);</script>\n'
                '<script type="module" src="%sassets/akaun.js?v=%s"></script>\n')
+
+
+TAJUK = {}  # tajuk setiap pertemuan (diisi oleh build_units) · ชื่อแต่ละครั้ง
 
 
 def VERSI(nama):
@@ -323,10 +360,10 @@ def akaun_teks():
 def page(title, body, depth=0, desc="", active="", path="", kunci=False):
     """kunci=True: halaman perlu log masuk (assets/akaun.js) · หน้านี้ต้องล็อกอิน"""
     p = "../" * depth
-    if path != "senarai.html":
+    if path not in ("senarai.html", "kemajuan.html", "kata.html", "sijil.html"):
         SITEMAP.append(SITE + path)
     nav = [("index.html#kandungan", "Kandungan", "kandungan"), ("index.html#jadual", "Jadual", "jadual"),
-           ("index.html#penilaian", "Penilaian", "penilaian")]
+           ("index.html#penilaian", "Penilaian", "penilaian"), ("kemajuan.html", "Kemajuan", "kemajuan")]
     links = "".join(f'<a href="{p}{h}"{" aria-current=\"page\"" if a == active else ""}><span>{t}</span>{jw_span(t, "small")}</a>' for h, t, a in nav)
     return f"""<!doctype html>
 <html lang="ms">
@@ -367,7 +404,7 @@ def page(title, body, depth=0, desc="", active="", path="", kunci=False):
   <p>Bahan disediakan oleh pasukan pengajar kursus. Laman ini dikendalikan oleh Asst. Prof. Muhammad Salaebing, Universiti Thaksin.</p>
 </footer>
 <script src="{p}assets/app.js?v={VERSI("app.js")}" defer></script>
-{(KUNCI_SKRIP % (akaun_teks(), p, VERSI("akaun.js"))) if kunci else ""}<script data-goatcounter="https://{GOATCOUNTER}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+{(KUNCI_SKRIP % (akaun_teks(), json.dumps(TAJUK, ensure_ascii=False), p, VERSI("akaun.js"))) if kunci else ""}<script data-goatcounter="https://{GOATCOUNTER}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
 """
@@ -380,6 +417,8 @@ def build_units():
         meta, sections = parse_unit(f)
         units[n] = (meta, sections, f.read_text(encoding="utf-8"))
     out_dir = ROOT / "pertemuan"; out_dir.mkdir(exist_ok=True)
+    for n_, (meta_, _s, _r) in units.items():
+        TAJUK[n_] = meta_["title"]
     for n, (meta, sections, raw) in units.items():
         iso, date, teacher, focus, activity = SCHEDULE[n]
         toc, parts = [], []
@@ -547,6 +586,16 @@ def build_index(units):
         "Kursus Bahasa Melayu secara dalam talian (tahap permulaan), 20 pertemuan, dalam tulisan Rumi dan Jawi, untuk penutur Melayu Selatan Thai.", "utama", ""), encoding="utf-8")
 
 
+def build_akaun_pages():
+    """Halaman peserta yang memerlukan log masuk · หน้าของผู้เรียนที่ต้องล็อกอิน"""
+    for fail, tajuk, aktif in [("kemajuan.html", "Kemajuan Saya", "kemajuan"), ("kata.html", "Buku Kata Saya", ""), ("sijil.html", "Sijil penyertaan", "")]:
+        body = f"""<article class="sheet" id="bm-halaman" data-halaman="{fail[:-5]}">
+  <h1 class="sheet-title">{tajuk}{jw_span(tajuk, "small")}</h1>
+  <div id="bm-isi"></div>
+</article>"""
+        (ROOT / fail).write_text(page(f"{tajuk} — Kursus BM Online", body, 0, tajuk, aktif, fail, kunci=True), encoding="utf-8")
+
+
 def build_senarai():
     """Halaman senarai peserta untuk pengajar (tidak dipautkan) · หน้ารายชื่อผู้เรียนสำหรับอาจารย์"""
     body = f"""<article class="sheet">
@@ -560,6 +609,7 @@ if __name__ == "__main__":
     u = build_units()
     build_index(u)
     build_senarai()
+    build_akaun_pages()
     (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"  <url><loc>{u_}</loc></url>\n" for u_ in sorted(SITEMAP)) + "</urlset>\n", encoding="utf-8")
     (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE}sitemap.xml\n", encoding="utf-8")
